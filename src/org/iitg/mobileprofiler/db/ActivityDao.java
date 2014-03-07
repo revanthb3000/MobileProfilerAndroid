@@ -1,4 +1,4 @@
-package org.iitg.miningBTP.db;
+package org.iitg.mobileprofiler.db;
 
 public class ActivityDao {
 	
@@ -60,6 +60,14 @@ public class ActivityDao {
 
 	public void setAssignedClass(String assignedClass) {
 		this.assignedClass = assignedClass;
+	}
+
+	@Override
+	public String toString() {
+		return "ActivityDao [activityId=" + activityId + ", activityType="
+				+ activityType + ", activityInfo=" + activityInfo
+				+ ", timeStamp=" + timeStamp + ", assignedClass="
+				+ assignedClass + "]";
 	}
 	
 	

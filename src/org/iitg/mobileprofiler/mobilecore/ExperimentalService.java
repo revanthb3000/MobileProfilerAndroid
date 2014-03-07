@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.iitg.miningBTP.db.ActivityDao;
+import org.iitg.mobileprofiler.db.ActivityDao;
+
 import android.app.Service;
 import android.content.Intent;
 import android.database.Cursor;

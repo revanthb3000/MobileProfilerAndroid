@@ -9,8 +9,8 @@ import java.util.TimerTask;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
-import org.iitg.miningBTP.db.ActivityDao;
-import org.iitg.miningBTP.db.DatabaseConnector;
+import org.iitg.mobileprofiler.db.ActivityDao;
+import org.iitg.mobileprofiler.db.DatabaseConnector;
 import org.iitg.mobileprofiler.helpers.EmailManager;
 
 import android.app.Service;

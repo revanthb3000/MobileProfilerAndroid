@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.iitg.miningBTP.core.Classifier;
-import org.iitg.miningBTP.db.DatabaseConnector;
+import org.iitg.mobileprofiler.core.Classifier;
+import org.iitg.mobileprofiler.db.DatabaseConnector;
 
 import android.app.Service;
 import android.content.Intent;
@@ -28,8 +28,8 @@ public class FeatureComputationService extends Service {
 		public void run() {
 			DatabaseConnector databaseConnector = new DatabaseConnector();
 			Classifier classifier = new Classifier(databaseConnector);
-			// classifier.recomputeFeatures();
-			ArrayList<String> features = classifier.getFeaturesList();
+			classifier.recomputeFeatures();
+			ArrayList<String> features = databaseConnector.getAllFeaturesList();
 			FileWriter fileWriter;
 			try {
 				fileWriter = new FileWriter(Environment

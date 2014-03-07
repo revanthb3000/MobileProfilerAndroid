@@ -13,10 +13,10 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.iitg.miningBTP.core.Classifier;
-import org.iitg.miningBTP.core.TextParser;
-import org.iitg.miningBTP.db.ActivityDao;
-import org.iitg.miningBTP.db.DatabaseConnector;
+import org.iitg.mobileprofiler.core.Classifier;
+import org.iitg.mobileprofiler.core.TextParser;
+import org.iitg.mobileprofiler.db.ActivityDao;
+import org.iitg.mobileprofiler.db.DatabaseConnector;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -45,11 +45,10 @@ public class ClassifierService extends Service {
 		Log.i("Classifier : ", "I've finished classifying.");
 		Log.i("Class is : ", assignedClass);
 
-		databaseConnector.updateClassContents(classId);
+		databaseConnector.updateClassContents(classId, true);
 		Log.i("Classifier : ", "I've finished updating class counts.");
 
-		databaseConnector.updateTermDistribution(
-				textParser.getAllTokens(inputText, true), classId);
+		databaseConnector.updateTermDistribution(textParser.getAllTokens(inputText, true), classId,true);
 		Log.i("Classifier : ", "I've finished updating term distribution.");
 
 		databaseConnector.closeDBConnection();

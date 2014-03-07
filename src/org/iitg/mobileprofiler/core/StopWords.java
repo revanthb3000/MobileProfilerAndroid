@@ -1,4 +1,4 @@
-package org.iitg.miningBTP.core;
+package org.iitg.mobileprofiler.core;
 
 import java.util.HashSet;
 
@@ -694,7 +694,16 @@ public class StopWords {
 	private void addWordToSet(String word){
 		stopWords.add(word);
 	}
-		
+	
+	/**
+	 * Removes a Stop Word from the set
+	 * @param word
+	 */
+	@SuppressWarnings("unused")
+	private void removeWordFromSet(String word){
+		stopWords.remove(word);
+	}
+	
 	/**
 	 * The core function from this class. Checks if a given word is a stopWord.
 	 * @param inputWord
