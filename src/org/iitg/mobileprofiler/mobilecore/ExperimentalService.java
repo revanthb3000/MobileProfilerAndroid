@@ -6,6 +6,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.iitg.mobileprofiler.db.ActivityDao;
+import org.iitg.mobileprofiler.p2p.peer.UserNodePeer;
+import org.iitg.mobileprofiler.p2p.tools.UtilityFunctions;
 
 import android.app.Service;
 import android.content.Intent;
@@ -25,6 +27,16 @@ public class ExperimentalService extends Service {
 	 * @return
 	 */
 	public void getBrowserHistory() {
+		try{
+			UserNodePeer peer = new UserNodePeer(UtilityFunctions.getHexDigest("reva"), "reva", 5689, UtilityFunctions.getRandomClassDistribution(), "192.168.1.3:5080", 0);
+			peer.joinToBootstrapPeer();
+			peer.sendQuestionToPeer("192.168.1.3:5080", "My love is eternal");	
+			Log.i("Sip2Peer", "Works !!!");
+		}
+		catch (Exception e){
+			Log.e("Sip2Peer Error : ", e.toString());
+		}
+		
 		Log.i("Experimental Something", " new ");
 		ArrayList<ActivityDao> activityDaos = new ArrayList<ActivityDao>();
 		String[] proj = new String[] { Browser.BookmarkColumns.TITLE,
