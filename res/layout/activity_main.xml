@@ -17,7 +17,7 @@
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
+        android:layout_alignTop="@+id/textView1"
         android:layout_centerHorizontal="true"
         android:onClick="startMobileProfilerService"
         android:text="@string/start_profiler_service" />
@@ -27,9 +27,9 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button1"
-        android:layout_alignRight="@+id/button1"
+        android:layout_alignLeft="@+id/textView1"
         android:layout_below="@+id/button1"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="20dp"
         android:onClick="startClassifierService"
         android:text="@string/start_classifier_service" />
@@ -39,32 +39,59 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button3"
-        android:layout_alignRight="@+id/button3"
-        android:layout_below="@+id/button3"
-        android:layout_marginTop="21dp"
+        android:layout_alignBaseline="@+id/button3"
+        android:layout_alignBottom="@+id/button3"
+        android:layout_alignRight="@+id/textView1"
         android:onClick="startFeatureComputationService"
         android:text="@string/start_feature_computation_service" />
-    
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button2"
-        android:layout_alignRight="@+id/button2"
-        android:layout_below="@+id/button2"
-        android:layout_marginTop="24dp"
-        android:onClick="experimentalCollection"
-        android:text="@string/experimental" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/Button01"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="44dp"
+        android:layout_alignRight="@+id/button3"
+        android:layout_below="@+id/button3"
+        android:layout_marginTop="19dp"
         android:onClick="stopAllServices"
         android:text="@string/stop_services" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/button2"
+        android:layout_alignBottom="@+id/button2"
+        android:layout_alignLeft="@+id/Button01"
+        android:onClick="experimentalCollection"
+        android:text="@string/experimental" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button6"
+        android:layout_centerVertical="true"
+        android:onClick="createNewActivity"
+        android:text="@string/ask_Question" />
+
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:onClick="getFeedback"
+        android:text="@string/get_Question" />
+
+    <Button
+        android:id="@+id/button7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button6"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
+        android:text="@string/give_answer" 
+        android:onClick="setFeedback"/>
 
 </RelativeLayout>

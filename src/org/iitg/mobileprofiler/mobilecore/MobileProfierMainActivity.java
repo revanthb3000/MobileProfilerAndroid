@@ -1,12 +1,16 @@
 package org.iitg.mobileprofiler.mobilecore;
 
+import com.iitg.mobileprofiler.Databasequestion;
+import com.iitg.mobileprofiler.Feedback;
 import com.iitg.mobileprofiler.R;
+import com.iitg.mobileprofiler.SampleTestAcitivity;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 
 public class MobileProfierMainActivity extends Activity {
 
@@ -46,6 +50,20 @@ public class MobileProfierMainActivity extends Activity {
 		stopService(new Intent(getBaseContext(), ExperimentalService.class));
 	}
 	
+	public void createNewActivity(View view){
+		Intent intent = new Intent(this, SampleTestAcitivity.class);
+		startActivity(intent);
+	}
+	
+	public void getFeedback(View view){
+		Intent intent = new Intent(this, Databasequestion.class);
+		startActivity(intent);
+	}
+	
+	public void setFeedback(View view){
+		Intent intent = new Intent(this, Feedback.class);
+		startActivity(intent);
+	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
