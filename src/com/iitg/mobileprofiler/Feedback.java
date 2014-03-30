@@ -1,11 +1,11 @@
 package com.iitg.mobileprofiler;
 
-import java.io.IOException;
+
+import org.iitg.mobileprofiler.mobilecore.MobileProfierMainActivity;
+import org.iitg.mobileprofiler.p2p.tools.PendingQuestion;
 
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,11 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.os.Build;
 
 public class Feedback extends ActionBarActivity {
 
@@ -30,16 +27,18 @@ public class Feedback extends ActionBarActivity {
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
-		TextView textView = (TextView)findViewById(R.id.editText1); 
-		//Get the question from DATABASE
-		textView.setText("OK Please rate this Q ");
+		TextView textView = (TextView)findViewById(R.id.editText1);
+		PendingQuestion pendingQuestion = null;
+		if(MobileProfierMainActivity.userNodePeer.getPendingQuestions().size()==0){
+			pendingQuestion = MobileProfierMainActivity.userNodePeer.getPendingQuestions().get(0);
+		}
+		textView.setText(pendingQuestion.getQuestion());
 		textView.setKeyListener(null);
 	}
 
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.feedback, menu);
 		return true;
@@ -86,12 +85,13 @@ public class Feedback extends ActionBarActivity {
 		System.out.println(rating);
 		if(rating<1 || rating>10){
 			System.out.println("IN IF");
-			new AlertDialog.Builder(this)
-		    .setTitle("HIGH RATING")
-		    .setMessage("Enter the values between 1 to 10").show();
+			new AlertDialog.Builder(this).setTitle("HIGH RATING").setMessage("Enter the values between 1 to 10").show();
 		}
 		else{
-			//Write the code to enter the value in DATABASE
+			PendingQuestion pendingQuestion = MobileProfierMainActivity.userNodePeer.getPendingQuestions().get(0);
+			MobileProfierMainActivity.userNodePeer.getPendingQuestions().remove(0);
+			pendingQuestion.setAnswer(rating);
+			pendingQuestion.sendReply();
 		}
 	}
 

@@ -1,28 +1,24 @@
 package com.iitg.mobileprofiler;
 
+import org.iitg.mobileprofiler.mobilecore.MobileProfierMainActivity;
+
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
-import android.os.Build;
 
-public class SampleTestAcitivity extends ActionBarActivity {
+public class AskQuestionActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_sample_test_acitivity);
+		setContentView(R.layout.activity_ask_question);
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
@@ -62,19 +58,23 @@ public class SampleTestAcitivity extends ActionBarActivity {
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(
-					R.layout.fragment_sample_test_acitivity, container, false);
+					R.layout.fragment_ask_question, container, false);
 			return rootView;
 		}
 	}
 	
 	public void sendQuestion(View view) {
 		EditText editText = (EditText) findViewById(R.id.editText1);
+		String message = editText.getText().toString();
 		System.out.println("Hello"+editText.getText().toString()+"BYE");
-		if(editText.getText().toString().equals(null)){
+		if(message.equals(null)){
 			System.out.println("IN IF");
 			new AlertDialog.Builder(this)
 		    .setTitle("Enter Question")
 		    .setMessage("Enter the Question").show();
+		}
+		else if(!message.equals("Enter your Question")){
+			MobileProfierMainActivity.userNodePeer.sendQuestionToPeers(message);
 		}
 		editText.setHint("Enter your Question");
 

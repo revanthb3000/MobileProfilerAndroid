@@ -12,12 +12,14 @@ import it.unipr.ce.dsg.s2p.sip.Address;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.iitg.mobileprofiler.db.DatabaseConnector;
 import org.iitg.mobileprofiler.p2p.msg.JoinMessage;
 import org.iitg.mobileprofiler.p2p.msg.PeerListMessage;
 import org.iitg.mobileprofiler.p2p.msg.PeerListRequestMessage;
 import org.iitg.mobileprofiler.p2p.msg.PingMessage;
 import org.iitg.mobileprofiler.p2p.msg.QueryReplyMessage;
 import org.iitg.mobileprofiler.p2p.msg.UserQueryMessage;
+import org.iitg.mobileprofiler.p2p.tools.PendingQuestion;
 import org.iitg.mobileprofiler.p2p.tools.UtilityFunctions;
 
 /**
@@ -33,7 +35,7 @@ public class UserNodePeer extends Peer {
 	private ArrayList<Integer> classContents;
 	
 	/**
-	 * Bootsta
+	 * Bootstrap Address
 	 */
 	private String bootstrapAddress;
 	
@@ -43,11 +45,15 @@ public class UserNodePeer extends Peer {
 	 */
 	private int numberOfPeers;
 	
-	public UserNodePeer(String key, String peerName, int peerPort, ArrayList<Integer> userClassContents, String bootstrapInfo, int numOfPeers){
+	private ArrayList<PendingQuestion> pendingQuestions;
+	
+	public UserNodePeer(String key, String peerName, int peerPort, ArrayList<Integer> userClassContents, String bootstrapInfo, String SBCAddress, int numOfPeers){
 		super(null, key, peerName, peerPort);
 		classContents = userClassContents;
 		bootstrapAddress = bootstrapInfo;
 		numberOfPeers = numOfPeers;
+		nodeConfig.sbc = SBCAddress;
+		pendingQuestions = new ArrayList<PendingQuestion>();
 	}
 	
 	public PeerListManager getPeerList(){
@@ -56,6 +62,10 @@ public class UserNodePeer extends Peer {
 	
 	public ArrayList<Integer> getClassContents() {
 		return classContents;
+	}
+
+	public ArrayList<PendingQuestion> getPendingQuestions() {
+		return pendingQuestions;
 	}
 
 	@Override
@@ -95,25 +105,34 @@ public class UserNodePeer extends Peer {
 				}
 			}
 			if(peerMsg.get("type").equals(UserQueryMessage.MSG_USER_QUERY)){
+				int questionId = Integer.parseInt(peerMsg.get("askerQuestionId").toString());
 				String question = peerMsg.get("textMessage").toString();
 				String userName = params.get("name").toString();
-				String ipAddress = params.get("contactAddress").toString().split("@")[1];
+				String ipAddress = peerMsg.getString("fromAddress");
 				ArrayList<Integer> questionClassDistribution = UtilityFunctions.getClassDistributionFromString(peerMsg.get("classDistribution").toString());
+				Double similarity = UtilityFunctions.getSimilarityScore(questionClassDistribution, classContents);
 				
 				System.out.println("Question from " + userName + ": " + question);
 				
-				int rating = 8;
-				
-				QueryReplyMessage queryReplyMessage = new QueryReplyMessage(peerDescriptor, question, UtilityFunctions.getSimilarityScore(questionClassDistribution, classContents), rating);
-				send(new Address(ipAddress), queryReplyMessage);
+				pendingQuestions.add(new PendingQuestion(question, similarity, questionId, ipAddress, this));
 			}
 			if(peerMsg.get("type").equals(QueryReplyMessage.MSG_QUERY_REPLY)){
 				System.out.println("Got a reply");
 				String question = peerMsg.get("question").toString();
 				String userName = params.get("name").toString();
+				
 				System.out.println(userName + " answered : " + question);
 				System.out.println("Rating : " + peerMsg.get("answer"));
 				System.out.println("Similarity : " + peerMsg.get("similarity"));
+				
+				int questionId = Integer.parseInt(peerMsg.get("askerQuestionId").toString());
+				int answer = Integer.parseInt(peerMsg.get("answer").toString());
+				Double similarity = Double.parseDouble(peerMsg.get("similarity").toString());
+
+				DatabaseConnector databaseConnector = new DatabaseConnector();
+				databaseConnector.addAnswer(questionId, answer, similarity);
+				databaseConnector.closeDBConnection();
+				
 			}
 		} catch (JSONException e) {
 			throw new RuntimeException(e);
@@ -208,9 +227,19 @@ public class UserNodePeer extends Peer {
 		}
 	}
 	
-	public void sendQuestionToPeer(String toAddress, String message){
-		UserQueryMessage textMessage = new UserQueryMessage(peerDescriptor, message, classContents);
-		send(new Address(toAddress), textMessage);
+	public void sendQuestionToPeers(String message){
+		DatabaseConnector databaseConnector = new DatabaseConnector();
+		int questionId = databaseConnector.getMaxQuestionId() + 1;
+		databaseConnector.addQuestion(message);
+		databaseConnector.closeDBConnection();
+		
+		UserQueryMessage textMessage = new UserQueryMessage(peerDescriptor, message, classContents,questionId, getAddress().getHost() + ":" + getAddress().getPort());
+		send(new Address(bootstrapAddress), textMessage);
+	}
+	
+	public void sendReply(String question, Double similarity, int answer, int questionId, String destinationIpAddress){
+		QueryReplyMessage queryReplyMessage = new QueryReplyMessage(peerDescriptor, question, similarity, answer, questionId);
+		send(new Address(destinationIpAddress), queryReplyMessage);
 	}
 	
 	public void sendPeerListRequestMessage(){
@@ -277,4 +306,14 @@ public class UserNodePeer extends Peer {
 	public void disconnectGWP(){
 		closePublicAddress();
 	}
+
+	@Override
+	public String toString() {
+		return "UserNodePeer [classContents=" + classContents
+				+ ", bootstrapAddress=" + bootstrapAddress + ", numberOfPeers="
+				+ numberOfPeers + ", pendingQuestions=" + pendingQuestions
+				+ "]";
+	}
+	
+	
 }

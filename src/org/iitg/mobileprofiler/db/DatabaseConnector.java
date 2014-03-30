@@ -532,5 +532,87 @@ public class DatabaseConnector {
 		query = query.replace(",);", ");");
 		sqLiteDatabase.execSQL(query);
 	}
+	
+	/*************************************************************************
+	 * Methods that work on the messages tables follow
+	 **************************************************************************/
+
+	/**
+	 * Basic question that adds a question asked by our user to the
+	 * questionmessages table.
+	 * 
+	 * @param question
+	 */
+	public void addQuestion(String question) {
+		String query = "INSERT INTO `questionmessages`(`question`) VALUES(\"" + question + "\");";
+		sqLiteDatabase.execSQL(query);
+	}
+
+	/**
+	 * 
+	 * When an answer is received, we store it here.
+	 * 
+	 * @param questionId
+	 * @param answer
+	 * @param similarity
+	 */
+	public void addAnswer(int questionId, int answer, Double similarity) {
+		String query = "INSERT INTO `answermessages`(`questionId`,`answer`,`similarity`) VALUES("
+				+ questionId + "," + answer + "," + similarity + ");";
+		sqLiteDatabase.execSQL(query);
+	}
+	
+	/**
+	 * Get the questionId of the last asked question.
+	 * @return
+	 */
+	public int getMaxQuestionId(){
+		String query = "SELECT MAX(questionId) from questionmessages;";
+		int questionId = 0;
+		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+		if (cursor != null && cursor.moveToFirst()) {
+			questionId = cursor.getInt(0);
+		}
+		cursor.close();
+		return questionId;
+	}
+
+	/**
+	 * Given a questionId, I'll return the weighted answer
+	 * @return 
+	 */
+	public Double getWeightedAnswer(int questionId) {
+		String query = "Select * from `answermessages` WHERE questionId = "
+				+ questionId + ";";
+		Double totalSimilarity = 0.0;
+		Double weightedAnswer = 0.0;
+		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+		if (cursor != null && cursor.moveToFirst()) {
+			do {
+				int answer = cursor.getInt(2);
+				Double similarity = cursor.getDouble(3);
+				weightedAnswer += (answer*similarity);
+				totalSimilarity += similarity;
+			} while (cursor.moveToNext());
+			weightedAnswer = weightedAnswer/totalSimilarity;
+		}
+		return weightedAnswer;
+	}
+	
+	/**
+	 * Given a questionId, this will return the question. Null, if not.
+	 * @param questionId
+	 * @return
+	 */
+	public String getQuestion(int questionId){
+		String query = "Select question from `questionmessages` WHERE questionId = " + questionId + ";";
+		String question = null;
+		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+		if (cursor != null && cursor.moveToFirst()) {
+			question = cursor.getString(0);
+		}
+		cursor.close();
+		return question;
+	}
 
 }

@@ -1,23 +1,38 @@
 package org.iitg.mobileprofiler.mobilecore;
 
-import com.iitg.mobileprofiler.Databasequestion;
+import java.util.ArrayList;
+import java.util.Date;
+
+import org.iitg.mobileprofiler.db.DatabaseConnector;
+import org.iitg.mobileprofiler.p2p.peer.UserNodePeer;
+import org.iitg.mobileprofiler.p2p.tools.UtilityFunctions;
+
+import com.iitg.mobileprofiler.DisplayQuestionActivity;
 import com.iitg.mobileprofiler.Feedback;
 import com.iitg.mobileprofiler.R;
-import com.iitg.mobileprofiler.SampleTestAcitivity;
+import com.iitg.mobileprofiler.AskQuestionActivity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 
 public class MobileProfierMainActivity extends Activity {
+	
+	public static UserNodePeer userNodePeer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		String phoneName = Build.ID + Build.MODEL + (new Date()).getTime();
+		DatabaseConnector databaseConnector = new DatabaseConnector();
+		ArrayList<Integer> userClassContents = databaseConnector.getNumberOfDocuments(0, databaseConnector.getNumberOfClasses(), true);
+		databaseConnector.closeDBConnection();
+		userNodePeer = new UserNodePeer(UtilityFunctions.getHexDigest(phoneName), phoneName, 5689, userClassContents, "192.168.1.3:5080", null, 0);
+		userNodePeer.joinToBootstrapPeer();
 	}
 
 	@Override
@@ -50,13 +65,13 @@ public class MobileProfierMainActivity extends Activity {
 		stopService(new Intent(getBaseContext(), ExperimentalService.class));
 	}
 	
-	public void createNewActivity(View view){
-		Intent intent = new Intent(this, SampleTestAcitivity.class);
+	public void startAskQuestionActivity(View view){
+		Intent intent = new Intent(this, AskQuestionActivity.class);
 		startActivity(intent);
 	}
 	
 	public void getFeedback(View view){
-		Intent intent = new Intent(this, Databasequestion.class);
+		Intent intent = new Intent(this, DisplayQuestionActivity.class);
 		startActivity(intent);
 	}
 	

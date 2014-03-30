@@ -19,9 +19,11 @@ public class TestClass {
 	
 	private static Scanner in = null;
 	
-	private static String ipAddress = "172.16.27.15";
+	private static String ipAddress = "192.168.1.3";
 	
 	private static int boostrapPort = 5080;
+	
+	private static int SBCPort = 6066;
 
 	public static void main(String[] args) throws JSONException {
 		in = new Scanner(System.in);
@@ -53,10 +55,11 @@ public class TestClass {
 		UserNodePeer peer = new UserNodePeer(UtilityFunctions.getHexDigest(currentTime), 
 											 peerName, portNumber, 
 											 UtilityFunctions.getRandomClassDistribution(), 
-											 ipAddress + ":" + boostrapPort, 0);
+											 ipAddress + ":" + boostrapPort, 
+											 ipAddress + ":" + SBCPort ,0);
 		
 		while(true){
-			System.out.print("What would you like to do ?\n1.Join the network.\n2.Get list of peers.\n3.Update peers list.\n4.Send a message to peer.\n5.Send ping to random peer.\nYour option : ");
+			System.out.print("What would you like to do ?\n1.Join the network.\n2.Get list of peers.\n3.Update peers list.\n4.Send a message to peer.\n5.See pending questions and reply to all.\n6.Contact SBC\nYour option : ");
 			Integer userInput = in.nextInt();
 			if(userInput==1){
 				peer.joinToBootstrapPeer();	
@@ -75,12 +78,16 @@ public class TestClass {
 				System.out.print("What is your message ? ");
 				String message = scanner.nextLine();
 				
-				System.out.print("Where should I send it to ? ");
-				String toAddress = scanner.nextLine();
-				peer.sendQuestionToPeer(toAddress, message);
+				peer.sendQuestionToPeers(message);
 			}
 			else if(userInput==5){
-				peer.pingToPeerRandomFromList();
+				for(PendingQuestion pendingQuestion : peer.getPendingQuestions()){
+					pendingQuestion.setAnswer(6);
+					pendingQuestion.sendReply();
+				}
+			}
+			else if(userInput==6){
+				peer.contactSBC();
 			}
 		}
 	}

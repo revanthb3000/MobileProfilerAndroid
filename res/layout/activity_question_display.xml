@@ -4,7 +4,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.iitg.mobileprofiler.Databasequestion"
+    tools:context="com.iitg.mobileprofiler.DisplayQuestionActivity"
     tools:ignore="MergeRootFrame" 
 />
 
