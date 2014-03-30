@@ -58,9 +58,20 @@
             android:label="@string/title_activity_databasequestion"
             android:theme="@style/Theme.AppCompat" >
         </activity>
+        
         <activity
             android:name="com.iitg.mobileprofiler.Feedback"
-            android:label="@string/title_activity_feedback" 
+            android:label="@string/title_activity_feedback"
+            android:theme="@style/Theme.AppCompat" >
+        </activity>
+        <activity
+            android:name="com.iitg.mobileprofiler.QueryActivity"
+            android:label="@string/title_activity_query"
+            android:theme="@style/Theme.AppCompat" >
+        </activity>
+        <activity
+            android:name="com.iitg.mobileprofiler.QnADisplayActivity"
+            android:label="@string/title_activity_qn_adisplay"
             android:theme="@style/Theme.AppCompat" >
         </activity>
     </application>

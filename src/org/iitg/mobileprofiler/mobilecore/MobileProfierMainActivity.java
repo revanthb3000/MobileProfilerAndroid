@@ -7,10 +7,10 @@ import org.iitg.mobileprofiler.db.DatabaseConnector;
 import org.iitg.mobileprofiler.p2p.peer.UserNodePeer;
 import org.iitg.mobileprofiler.p2p.tools.UtilityFunctions;
 
-import com.iitg.mobileprofiler.DisplayQuestionActivity;
 import com.iitg.mobileprofiler.Feedback;
+import com.iitg.mobileprofiler.QnADisplayActivity;
+import com.iitg.mobileprofiler.QueryActivity;
 import com.iitg.mobileprofiler.R;
-import com.iitg.mobileprofiler.AskQuestionActivity;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -66,12 +66,12 @@ public class MobileProfierMainActivity extends Activity {
 	}
 	
 	public void startAskQuestionActivity(View view){
-		Intent intent = new Intent(this, AskQuestionActivity.class);
+		Intent intent = new Intent(this, QueryActivity.class);
 		startActivity(intent);
 	}
 	
 	public void getFeedback(View view){
-		Intent intent = new Intent(this, DisplayQuestionActivity.class);
+		Intent intent = new Intent(this, QnADisplayActivity.class);
 		startActivity(intent);
 	}
 	

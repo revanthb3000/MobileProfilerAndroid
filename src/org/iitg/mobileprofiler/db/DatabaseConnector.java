@@ -594,7 +594,12 @@ public class DatabaseConnector {
 				weightedAnswer += (answer*similarity);
 				totalSimilarity += similarity;
 			} while (cursor.moveToNext());
-			weightedAnswer = weightedAnswer/totalSimilarity;
+			if(totalSimilarity==0.0){
+				weightedAnswer = 0.0;
+			}
+			else{
+				weightedAnswer = weightedAnswer/totalSimilarity;	
+			}
 		}
 		return weightedAnswer;
 	}

@@ -3,6 +3,7 @@ package com.iitg.mobileprofiler;
 import org.iitg.mobileprofiler.db.DatabaseConnector;
 
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +16,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class DisplayQuestionActivity extends ActionBarActivity {
+public class QnADisplayActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +54,12 @@ public class DisplayQuestionActivity extends ActionBarActivity {
 		// TODO Auto-generated method stub
 		System.out.println("I WANT THIS TO HAPPEN");
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.databasequestion, menu);
+		getMenuInflater().inflate(R.menu.qn_adisplay, menu);
 		return true;
 	}
 
@@ -84,8 +86,8 @@ public class DisplayQuestionActivity extends ActionBarActivity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(
-					R.layout.fragment_question_display, container, false);
+			View rootView = inflater.inflate(R.layout.fragment_qn_adisplay,
+					container, false);
 			return rootView;
 		}
 	}

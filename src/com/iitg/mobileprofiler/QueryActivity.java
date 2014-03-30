@@ -3,6 +3,7 @@ package com.iitg.mobileprofiler;
 import org.iitg.mobileprofiler.mobilecore.MobileProfierMainActivity;
 
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -12,13 +13,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.os.Build;
 
-public class AskQuestionActivity extends ActionBarActivity {
+public class QueryActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_ask_question);
+		setContentView(R.layout.activity_query);
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
@@ -30,7 +32,7 @@ public class AskQuestionActivity extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.sample_test_acitivity, menu);
+		getMenuInflater().inflate(R.menu.query, menu);
 		return true;
 	}
 
@@ -57,8 +59,8 @@ public class AskQuestionActivity extends ActionBarActivity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(
-					R.layout.fragment_ask_question, container, false);
+			View rootView = inflater.inflate(R.layout.fragment_query,
+					container, false);
 			return rootView;
 		}
 	}

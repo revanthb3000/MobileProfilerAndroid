@@ -994,10 +994,10 @@ containing a value of this type.
         public static final int icon=0x7f02005d;
     }
     public static final class id {
-        public static final int Button=0x7f05003f;
+        public static final int Button=0x7f05003e;
         public static final int Button01=0x7f050044;
-        public static final int ButtonNext=0x7f050040;
-        public static final int EditText=0x7f050041;
+        public static final int ButtonNext=0x7f05003f;
+        public static final int EditText=0x7f050040;
         public static final int action_bar=0x7f05001c;
         public static final int action_bar_activity_content=0x7f050015;
         public static final int action_bar_container=0x7f05001b;
@@ -1013,7 +1013,7 @@ containing a value of this type.
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
-        public static final int button1=0x7f05003e;
+        public static final int button1=0x7f050042;
         public static final int button2=0x7f050045;
         public static final int button3=0x7f050043;
         public static final int button4=0x7f050046;
@@ -1063,7 +1063,7 @@ containing a value of this type.
         public static final int split_action_bar=0x7f05001e;
         public static final int submit_area=0x7f050039;
         public static final int tabMode=0x7f050002;
-        public static final int textView1=0x7f050042;
+        public static final int textView1=0x7f050041;
         public static final int title=0x7f05002b;
         public static final int top_action_bar=0x7f050020;
         public static final int up=0x7f050021;
@@ -1119,13 +1119,13 @@ containing a value of this type.
         public static final int abc_popup_menu_item_layout=0x7f030014;
         public static final int abc_search_dropdown_item_icons_2line=0x7f030015;
         public static final int abc_search_view=0x7f030016;
-        public static final int activity_ask_question=0x7f030017;
-        public static final int activity_feedback=0x7f030018;
-        public static final int activity_main=0x7f030019;
-        public static final int activity_question_display=0x7f03001a;
-        public static final int fragment_ask_question=0x7f03001b;
-        public static final int fragment_feedback=0x7f03001c;
-        public static final int fragment_question_display=0x7f03001d;
+        public static final int activity_feedback=0x7f030017;
+        public static final int activity_main=0x7f030018;
+        public static final int activity_qn_adisplay=0x7f030019;
+        public static final int activity_query=0x7f03001a;
+        public static final int fragment_feedback=0x7f03001b;
+        public static final int fragment_qn_adisplay=0x7f03001c;
+        public static final int fragment_query=0x7f03001d;
         public static final int new_activity=0x7f03001e;
         public static final int support_simple_spinner_dropdown_item=0x7f03001f;
     }
@@ -1133,7 +1133,9 @@ containing a value of this type.
         public static final int databasequestion=0x7f0c0000;
         public static final int feedback=0x7f0c0001;
         public static final int main=0x7f0c0002;
-        public static final int sample_test_acitivity=0x7f0c0003;
+        public static final int qn_adisplay=0x7f0c0003;
+        public static final int query=0x7f0c0004;
+        public static final int sample_test_acitivity=0x7f0c0005;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1185,6 +1187,7 @@ containing a value of this type.
         public static final int fb_app_id=0x7f0a0015;
         public static final int get_Question=0x7f0a001b;
         public static final int give_answer=0x7f0a001d;
+        public static final int hello_world=0x7f0a0023;
         public static final int next=0x7f0a0020;
         public static final int question=0x7f0a0018;
         public static final int questionDB=0x7f0a0019;
@@ -1195,6 +1198,8 @@ containing a value of this type.
         public static final int stop_services=0x7f0a0010;
         public static final int title_activity_databasequestion=0x7f0a001c;
         public static final int title_activity_feedback=0x7f0a001e;
+        public static final int title_activity_qn_adisplay=0x7f0a0024;
+        public static final int title_activity_query=0x7f0a0022;
         public static final int title_activity_sample_test_acitivity=0x7f0a0016;
         public static final int welcome=0x7f0a0017;
     }

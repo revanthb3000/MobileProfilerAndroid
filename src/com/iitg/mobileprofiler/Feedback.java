@@ -28,11 +28,11 @@ public class Feedback extends ActionBarActivity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		TextView textView = (TextView)findViewById(R.id.editText1);
-		PendingQuestion pendingQuestion = null;
-		if(MobileProfierMainActivity.userNodePeer.getPendingQuestions().size()==0){
-			pendingQuestion = MobileProfierMainActivity.userNodePeer.getPendingQuestions().get(0);
+		String question = null;
+		if(MobileProfierMainActivity.userNodePeer.getPendingQuestions().size()!=0){
+			question = MobileProfierMainActivity.userNodePeer.getPendingQuestions().get(0).getQuestion();
 		}
-		textView.setText(pendingQuestion.getQuestion());
+		textView.setText(question);
 		textView.setKeyListener(null);
 	}
 
@@ -88,10 +88,12 @@ public class Feedback extends ActionBarActivity {
 			new AlertDialog.Builder(this).setTitle("HIGH RATING").setMessage("Enter the values between 1 to 10").show();
 		}
 		else{
-			PendingQuestion pendingQuestion = MobileProfierMainActivity.userNodePeer.getPendingQuestions().get(0);
-			MobileProfierMainActivity.userNodePeer.getPendingQuestions().remove(0);
-			pendingQuestion.setAnswer(rating);
-			pendingQuestion.sendReply();
+			if(MobileProfierMainActivity.userNodePeer.getPendingQuestions().size()!=0){
+				PendingQuestion pendingQuestion = MobileProfierMainActivity.userNodePeer.getPendingQuestions().get(0);
+				MobileProfierMainActivity.userNodePeer.getPendingQuestions().remove(0);
+				pendingQuestion.setAnswer(rating);
+				pendingQuestion.sendReply();	
+			}
 		}
 	}
 

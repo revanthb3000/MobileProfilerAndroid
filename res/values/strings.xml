@@ -21,6 +21,9 @@
     <string name="title_activity_feedback">Feedback</string>
     <string name="answer">Send Feedback</string>
     <string name="next">Next Feedback</string>
-     <string name="enter_launch_codes">Enter the rating(1-10)</string>
+    <string name="enter_launch_codes">Enter the rating(1-10)</string>
+    <string name="title_activity_query">QueryActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_qn_adisplay">QnADisplayActivity</string>
 
 </resources>

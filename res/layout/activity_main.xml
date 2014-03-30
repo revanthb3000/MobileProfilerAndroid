@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/button6"
         android:layout_centerVertical="true"
-        android:onClick="createNewActivity"
+        android:onClick="startAskQuestionActivity"
         android:text="@string/ask_Question" />
 
     <Button
