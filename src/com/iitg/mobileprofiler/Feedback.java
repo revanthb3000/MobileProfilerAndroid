@@ -28,7 +28,7 @@ public class Feedback extends ActionBarActivity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		TextView textView = (TextView)findViewById(R.id.editText1);
-		String question = null;
+		String question = "No questions to answer";
 		if(MobileProfierMainActivity.userNodePeer.getPendingQuestions().size()!=0){
 			question = MobileProfierMainActivity.userNodePeer.getPendingQuestions().get(0).getQuestion();
 		}
@@ -95,6 +95,19 @@ public class Feedback extends ActionBarActivity {
 				pendingQuestion.sendReply();	
 			}
 		}
+	}
+	
+	public void nextQuestion(View view){
+		TextView textView = (TextView)findViewById(R.id.editText1);
+		PendingQuestion pendingQuestion = null;
+		if(MobileProfierMainActivity.userNodePeer.getPendingQuestions().size()!=0){
+			pendingQuestion = MobileProfierMainActivity.userNodePeer.getPendingQuestions().get(0);
+			MobileProfierMainActivity.userNodePeer.getPendingQuestions().remove(0);
+			MobileProfierMainActivity.userNodePeer.getPendingQuestions().add(pendingQuestion);
+		}
+		String question = MobileProfierMainActivity.userNodePeer.getPendingQuestions().get(0).getQuestion();
+		textView.setText(question);
+		textView.setKeyListener(null);		
 	}
 
 }

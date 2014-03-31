@@ -30,7 +30,8 @@
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentRight="true"
+            android:onClick="nextQuestion">
         </Button>
          <EditText android:id="@+id/EditText" 
             android:hint="@string/enter_launch_codes" 
