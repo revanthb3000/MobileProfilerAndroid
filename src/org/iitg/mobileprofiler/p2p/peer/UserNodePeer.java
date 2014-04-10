@@ -18,9 +18,14 @@ import org.iitg.mobileprofiler.p2p.msg.PeerListMessage;
 import org.iitg.mobileprofiler.p2p.msg.PeerListRequestMessage;
 import org.iitg.mobileprofiler.p2p.msg.PingMessage;
 import org.iitg.mobileprofiler.p2p.msg.QueryReplyMessage;
+import org.iitg.mobileprofiler.p2p.msg.RepoStorageMessage;
+import org.iitg.mobileprofiler.p2p.msg.ResponseDataMessage;
+import org.iitg.mobileprofiler.p2p.msg.ResponseRequestMessage;
 import org.iitg.mobileprofiler.p2p.msg.UserQueryMessage;
 import org.iitg.mobileprofiler.p2p.tools.PendingQuestion;
 import org.iitg.mobileprofiler.p2p.tools.UtilityFunctions;
+
+import com.google.gson.Gson;
 
 /**
  * The UserNodePeer node that we'll use for user nodes.
@@ -132,7 +137,14 @@ public class UserNodePeer extends Peer {
 				DatabaseConnector databaseConnector = new DatabaseConnector();
 				databaseConnector.addAnswer(questionId, answer, similarity);
 				databaseConnector.closeDBConnection();
-				
+			}
+			if(peerMsg.get("type").equals(ResponseDataMessage.MSG_RESPONSE_DATA)){
+				System.out.println("Repo Updated");
+				Gson gson = new Gson();
+				ResponseDataMessage responseDataMessage = gson.fromJson(peerMsg.toString(), ResponseDataMessage.class);
+				DatabaseConnector databaseConnector = new DatabaseConnector();
+				databaseConnector.insertResponses(responseDataMessage.getResponses());
+				databaseConnector.closeDBConnection();
 			}
 		} catch (JSONException e) {
 			throw new RuntimeException(e);
@@ -239,7 +251,9 @@ public class UserNodePeer extends Peer {
 	
 	public void sendReply(String question, Double similarity, int answer, int questionId, String destinationIpAddress){
 		QueryReplyMessage queryReplyMessage = new QueryReplyMessage(peerDescriptor, question, similarity, answer, questionId);
+		RepoStorageMessage repoStorageMessage = new RepoStorageMessage(peerDescriptor, question, peerDescriptor.getName() , answer);
 		send(new Address(destinationIpAddress), queryReplyMessage);
+		send(new Address(bootstrapAddress), repoStorageMessage);
 	}
 	
 	public void sendPeerListRequestMessage(){
@@ -302,18 +316,16 @@ public class UserNodePeer extends Peer {
 		else
 			System.out.println("no sbc address found");
 	}
+	
+	public void updateRepo(){
+		DatabaseConnector databaseConnector = new DatabaseConnector();
+		int maxResponseId = databaseConnector.getMaxResponseId();
+		databaseConnector.closeDBConnection();
+		ResponseRequestMessage responseRequestMessage = new ResponseRequestMessage(peerDescriptor, maxResponseId);
+		send(new Address(bootstrapAddress), responseRequestMessage);
+	}
 
 	public void disconnectGWP(){
 		closePublicAddress();
 	}
-
-	@Override
-	public String toString() {
-		return "UserNodePeer [classContents=" + classContents
-				+ ", bootstrapAddress=" + bootstrapAddress + ", numberOfPeers="
-				+ numberOfPeers + ", pendingQuestions=" + pendingQuestions
-				+ "]";
-	}
-	
-	
 }

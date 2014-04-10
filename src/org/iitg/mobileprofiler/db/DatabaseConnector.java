@@ -11,10 +11,12 @@ import android.os.Environment;
 import android.util.Log;
 
 /**
- * This is the main class used to interact with the database.
- * A class with several methods in it. Contains methods for all database queries that will be used.
+ * This is the main class used to interact with the database. A class with
+ * several methods in it. Contains methods for all database queries that will be
+ * used.
+ * 
  * @author RB
- *
+ * 
  */
 public class DatabaseConnector {
 
@@ -45,32 +47,39 @@ public class DatabaseConnector {
 	 * Tries to open a DB connection with the sqlite database.
 	 */
 	public void openDBConnection() {
-		sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(DATABASE_FILE_NAME, null);
+		sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(
+				DATABASE_FILE_NAME, null);
 	}
-	
+
 	/**
-	 * Does what it says. Calling this function is crucial. Don't want any open connections lingering around !
+	 * Does what it says. Calling this function is crucial. Don't want any open
+	 * connections lingering around !
 	 */
 	public void closeDBConnection() {
 		sqLiteDatabase.close();
 	}
 
 	/**
-	 * Given a word and classId, this function will return a TermDistributionDao object which will also contain the 'A' value.
+	 * Given a word and classId, this function will return a TermDistributionDao
+	 * object which will also contain the 'A' value.
+	 * 
 	 * @param term
 	 * @param classId
-	 * @param isUserDataTable 
+	 * @param isUserDataTable
 	 * @return
 	 */
-	public TermDistributionDao getTermDistribution(String term, int classId, boolean isUserDataTable) {
-		String query = "SELECT * from "+ (isUserDataTable?"userdataterms":"termdistribution")+" where term='" + term
-				+ "' AND classId=" + classId + ";";
+	public TermDistributionDao getTermDistribution(String term, int classId,
+			boolean isUserDataTable) {
+		String query = "SELECT * from "
+				+ (isUserDataTable ? "userdataterms" : "termdistribution")
+				+ " where term='" + term + "' AND classId=" + classId + ";";
 
 		TermDistributionDao termDistributionDao = null;
 
 		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 		if (cursor != null && cursor.moveToFirst()) {
-			int a = cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(2)));
+			int a = cursor
+					.getInt(cursor.getColumnIndex(cursor.getColumnName(2)));
 			termDistributionDao = new TermDistributionDao(term, classId, a);
 		}
 		cursor.close();
@@ -78,14 +87,19 @@ public class DatabaseConnector {
 	}
 
 	/**
-	 * Given a term, this function will return a Map between classId and termDistributionDao objects. Useful function if you need the distribution of a term across all classes.
+	 * Given a term, this function will return a Map between classId and
+	 * termDistributionDao objects. Useful function if you need the distribution
+	 * of a term across all classes.
+	 * 
 	 * @param term
-	 * @param isUserDataTable 
+	 * @param isUserDataTable
 	 * @return
 	 */
-	public Map<Integer, TermDistributionDao> getAllTermDistribution(String term, boolean isUserDataTable) {
-		String query = "SELECT * from "+ (isUserDataTable?"userdataterms":"termdistribution")+" where term='" + term
-				+ "';";
+	public Map<Integer, TermDistributionDao> getAllTermDistribution(
+			String term, boolean isUserDataTable) {
+		String query = "SELECT * from "
+				+ (isUserDataTable ? "userdataterms" : "termdistribution")
+				+ " where term='" + term + "';";
 
 		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 		Map<Integer, TermDistributionDao> termDistributionDaos = new HashMap<Integer, TermDistributionDao>();
@@ -95,17 +109,22 @@ public class DatabaseConnector {
 						.getColumnName(1)));
 				int a = cursor.getInt(cursor.getColumnIndex(cursor
 						.getColumnName(2)));
-				TermDistributionDao termDistributionDao = new TermDistributionDao(term, classId, a);
-				termDistributionDaos.put(termDistributionDao.getClassId(),termDistributionDao);
+				TermDistributionDao termDistributionDao = new TermDistributionDao(
+						term, classId, a);
+				termDistributionDaos.put(termDistributionDao.getClassId(),
+						termDistributionDao);
 			} while (cursor.moveToNext());
 		}
 		return termDistributionDaos;
 	}
 
 	/**
-	 * Similar to the previous function. Given a set of tokens, a Map is returned that will contain info of the termDistribution of each term present in the ArrayList.
+	 * Similar to the previous function. Given a set of tokens, a Map is
+	 * returned that will contain info of the termDistribution of each term
+	 * present in the ArrayList.
+	 * 
 	 * @param tokens
-	 * @param isUserDataTable 
+	 * @param isUserDataTable
 	 * @return
 	 */
 	public Map<String, Map<Integer, TermDistributionDao>> getAllTokensDistribution(
@@ -114,8 +133,9 @@ public class DatabaseConnector {
 			return null;
 		}
 		String term = tokens.get(0), previousTerm = tokens.get(0);
-		String query = "SELECT * from "+ (isUserDataTable?"userdataterms":"termdistribution")+" where term='" + term
-				+ "'";
+		String query = "SELECT * from "
+				+ (isUserDataTable ? "userdataterms" : "termdistribution")
+				+ " where term='" + term + "'";
 		for (int i = 1; i < tokens.size(); i++) {
 			term = tokens.get(i);
 			if (term.equals(previousTerm)) {
@@ -154,7 +174,9 @@ public class DatabaseConnector {
 	}
 
 	/**
-	 * Given a set of words, this function returns all those terms that are a part of our feature set.
+	 * Given a set of words, this function returns all those terms that are a
+	 * part of our feature set.
+	 * 
 	 * @param tokens
 	 * @return
 	 */
@@ -177,15 +199,17 @@ public class DatabaseConnector {
 		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 		if (cursor != null && cursor.moveToFirst()) {
 			do {
-				String token = cursor.getString(cursor.getColumnIndex(cursor.getColumnName(0)));
+				String token = cursor.getString(cursor.getColumnIndex(cursor
+						.getColumnName(0)));
 				features.add(token);
 			} while (cursor.moveToNext());
 		}
 		return features;
 	}
-	
+
 	/**
 	 * Returns a list of all the features used by the classifier.
+	 * 
 	 * @return
 	 */
 	public ArrayList<String> getAllFeaturesList() {
@@ -194,15 +218,17 @@ public class DatabaseConnector {
 		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 		if (cursor != null && cursor.moveToFirst()) {
 			do {
-				String token = cursor.getString(cursor.getColumnIndex(cursor.getColumnName(0)));
+				String token = cursor.getString(cursor.getColumnIndex(cursor
+						.getColumnName(0)));
 				features.add(token);
 			} while (cursor.moveToNext());
 		}
 		return features;
 	}
-	
+
 	/**
 	 * Tells if a given term is a feature or not.
+	 * 
 	 * @param term
 	 * @return
 	 */
@@ -220,6 +246,7 @@ public class DatabaseConnector {
 
 	/**
 	 * Queries the database and gets the total number of classes used.
+	 * 
 	 * @return
 	 */
 	public int getNumberOfClasses() {
@@ -234,12 +261,16 @@ public class DatabaseConnector {
 	}
 
 	/**
-	 * Queries the database and gets the total number of documents that have been classified till now.
-	 * @param isUserDataTable 
+	 * Queries the database and gets the total number of documents that have
+	 * been classified till now.
+	 * 
+	 * @param isUserDataTable
 	 * @return
 	 */
 	public int getTotalNumberOfDocuments(boolean isUserDataTable) {
-		String query = "SELECT SUM(numberOfDocs) from "+(isUserDataTable?"userdataclasscontents":"classcontents")+";";
+		String query = "SELECT SUM(numberOfDocs) from "
+				+ (isUserDataTable ? "userdataclasscontents" : "classcontents")
+				+ ";";
 		int totalNumberOfDocs = 0;
 		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 		if (cursor != null && cursor.moveToFirst()) {
@@ -251,14 +282,18 @@ public class DatabaseConnector {
 
 	/**
 	 * Returns the number of docs. that belong the classIds between two numbers.
+	 * 
 	 * @param startingClassId
 	 * @param endingClassId
-	 * @param isUserDataTable 
+	 * @param isUserDataTable
 	 * @return
 	 */
-	public ArrayList<Integer> getNumberOfDocuments(int startingClassId, int endingClassId, boolean isUserDataTable) {
-		String query = "SELECT numberOfDocs from " + (isUserDataTable?"userdataclasscontents":"classcontents") + " where classId>="
-				+ startingClassId + " AND classId<=" + endingClassId + ";";
+	public ArrayList<Integer> getNumberOfDocuments(int startingClassId,
+			int endingClassId, boolean isUserDataTable) {
+		String query = "SELECT numberOfDocs from "
+				+ (isUserDataTable ? "userdataclasscontents" : "classcontents")
+				+ " where classId>=" + startingClassId + " AND classId<="
+				+ endingClassId + ";";
 		ArrayList<Integer> classContents = new ArrayList<Integer>();
 		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 		if (cursor != null && cursor.moveToFirst()) {
@@ -273,6 +308,7 @@ public class DatabaseConnector {
 
 	/**
 	 * Given a classId, this function returns the name of the class.
+	 * 
 	 * @param classId
 	 * @return
 	 */
@@ -290,11 +326,14 @@ public class DatabaseConnector {
 
 	/**
 	 * Returns the list of all terms present in the database.
-	 * @param isUserDataTable 
+	 * 
+	 * @param isUserDataTable
 	 * @return
 	 */
 	public ArrayList<String> getTermsList(boolean isUserDataTable) {
-		String query = "SELECT distinct(term) from "+ (isUserDataTable?"userdataterms":"termdistribution")+";";
+		String query = "SELECT distinct(term) from "
+				+ (isUserDataTable ? "userdataterms" : "termdistribution")
+				+ ";";
 		ArrayList<String> termsList = new ArrayList<String>();
 		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 		if (cursor != null && cursor.moveToFirst()) {
@@ -312,7 +351,7 @@ public class DatabaseConnector {
 		String query = "Delete from featurelist";
 		sqLiteDatabase.execSQL(query);
 	}
-	
+
 	/**
 	 * Deletes all those entries where A=0. Those are useless and redundant.
 	 * NOTE: Thus function is obsolete.
@@ -346,15 +385,19 @@ public class DatabaseConnector {
 	}
 
 	/**
-	 * Given a term and classId, this functions tells you if there's a <term,classId,A> mapping
+	 * Given a term and classId, this functions tells you if there's a
+	 * <term,classId,A> mapping
+	 * 
 	 * @param term
 	 * @param classId
-	 * @param isUserDataTable 
+	 * @param isUserDataTable
 	 * @return
 	 */
-	public Boolean isTermPresentInTermDistribution(String term, int classId, boolean isUserDataTable) {
-		String query = "SELECT * from "+(isUserDataTable?"userdataterms":"termdistribution")+" where term='" + term
-				+ "' and classId = " + classId + ";";
+	public Boolean isTermPresentInTermDistribution(String term, int classId,
+			boolean isUserDataTable) {
+		String query = "SELECT * from "
+				+ (isUserDataTable ? "userdataterms" : "termdistribution")
+				+ " where term='" + term + "' and classId = " + classId + ";";
 		Boolean isTermPresent = false;
 		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 		if (cursor != null && cursor.moveToFirst()) {
@@ -366,50 +409,61 @@ public class DatabaseConnector {
 
 	/**
 	 * Given a classId, the class contents for that classId are incremented.
+	 * 
 	 * @param classId
 	 */
 	public void updateClassContents(int classId, boolean isUserDataTable) {
-		String query = "Update `" + (isUserDataTable?"userdataclasscontents":"classcontents") + "` SET numberOfDocs = numberOfDocs + 1 Where classId=" + classId + ";";
+		String query = "Update `"
+				+ (isUserDataTable ? "userdataclasscontents" : "classcontents")
+				+ "` SET numberOfDocs = numberOfDocs + 1 Where classId="
+				+ classId + ";";
 		sqLiteDatabase.execSQL(query);
 	}
 
 	/**
-	 * Given a set of terms, the termDistribution table is updated. Old terms are updated and new terms are added.
+	 * Given a set of terms, the termDistribution table is updated. Old terms
+	 * are updated and new terms are added.
+	 * 
 	 * @param tokens
 	 * @param classId
 	 */
-	public void updateTermDistribution(ArrayList<String> tokens, int classId, boolean isUserDataTable) {
+	public void updateTermDistribution(ArrayList<String> tokens, int classId,
+			boolean isUserDataTable) {
 		ArrayList<String> oldTerms = new ArrayList<String>();
 		ArrayList<String> newTerms = new ArrayList<String>();
 		for (String term : tokens) {
-			if (!isTermPresentInTermDistribution(term, classId,isUserDataTable)) {
+			if (!isTermPresentInTermDistribution(term, classId, isUserDataTable)) {
 				newTerms.add(term);
 			} else {
 				oldTerms.add(term);
 			}
 		}
-		updateTermInfo(oldTerms, classId,isUserDataTable);
-		insertTermInfo(newTerms, classId,isUserDataTable);
+		updateTermInfo(oldTerms, classId, isUserDataTable);
+		insertTermInfo(newTerms, classId, isUserDataTable);
 	}
 
 	/**
-	 * Given a couple of terms and a classId, this function adds the <term,classId,A> mapping
+	 * Given a couple of terms and a classId, this function adds the
+	 * <term,classId,A> mapping
 	 * 
 	 * @param newTerms
 	 * @param classId
-	 * @param isUserDataTable 
+	 * @param isUserDataTable
 	 */
-	public void insertTermInfo(ArrayList<String> newTerms, int classId, boolean isUserDataTable) {
+	public void insertTermInfo(ArrayList<String> newTerms, int classId,
+			boolean isUserDataTable) {
 		String query = "";
 		for (int i = 0; i < newTerms.size(); i++) {
 			if (i % 450 == 0) {
 				sqLiteDatabase.execSQL(query);
-				query = "INSERT INTO `" + (isUserDataTable?"userdataterms":"termdistribution") + "` Select '"
+				query = "INSERT INTO `"
+						+ (isUserDataTable ? "userdataterms"
+								: "termdistribution") + "` Select '"
 						+ newTerms.get(i) + "' AS `term`, " + classId
 						+ " AS `classId`, 1 AS `A`";
 			} else {
-				query += "UNION SELECT '" + newTerms.get(i) + "',"
-						+ classId + ",1 ";
+				query += "UNION SELECT '" + newTerms.get(i) + "'," + classId
+						+ ",1 ";
 			}
 		}
 		sqLiteDatabase.execSQL(query);
@@ -417,14 +471,18 @@ public class DatabaseConnector {
 
 	/**
 	 * Increments the count of <term,classId,A> mappings.
+	 * 
 	 * @param oldTerms
 	 * @param classId
 	 */
-	public void updateTermInfo(ArrayList<String> oldTerms, int classId, boolean isUserDataTable) {
+	public void updateTermInfo(ArrayList<String> oldTerms, int classId,
+			boolean isUserDataTable) {
 		int numOfTerms = oldTerms.size();
 		int iterator = 0;
-		while(iterator<numOfTerms){
-			String query = "Update "+ (isUserDataTable?"userdataterms":"termdistribution")+" SET `A` = `A` + 1 Where (term='"
+		while (iterator < numOfTerms) {
+			String query = "Update "
+					+ (isUserDataTable ? "userdataterms" : "termdistribution")
+					+ " SET `A` = `A` + 1 Where (term='"
 					+ oldTerms.get(iterator) + "' ";
 			iterator++;
 			while (iterator % 950 != 0 && iterator < numOfTerms) {
@@ -432,26 +490,25 @@ public class DatabaseConnector {
 				iterator++;
 			}
 			query += ") and classId=" + classId + ";";
-			sqLiteDatabase.execSQL(query);			
+			sqLiteDatabase.execSQL(query);
 		}
 	}
 
-	
 	/*************************************************************************
 	 * Methods that work on the activities table follow
 	 **************************************************************************/
-	
-	
+
 	/**
 	 * Basic function that inserts an activityDao into the Database.
+	 * 
 	 * @param activityDaos
 	 */
 	public void insertActivityIntoDB(ArrayList<ActivityDao> activityDaos) {
 		String query = "";
 		for (int i = 0; i < activityDaos.size(); i++) {
 			if (i % 450 == 0) {
-				if(!query.equals("")){
-					sqLiteDatabase.execSQL(query);	
+				if (!query.equals("")) {
+					sqLiteDatabase.execSQL(query);
 				}
 				query = "INSERT INTO `activities`( `activityType`, `activityInfo`, `timeStamp`, `assignedClass`) Select '"
 						+ activityDaos.get(i).getActivityType()
@@ -464,18 +521,23 @@ public class DatabaseConnector {
 						+ "' AS `assignedClass`";
 			} else {
 				query += "UNION SELECT '"
-						+ activityDaos.get(i).getActivityType() + "','"
-						+ activityDaos.get(i).getActivityInfo().replace("'","''") + "','"
+						+ activityDaos.get(i).getActivityType()
+						+ "','"
+						+ activityDaos.get(i).getActivityInfo()
+								.replace("'", "''") + "','"
 						+ activityDaos.get(i).getTimeStamp() + "','"
 						+ activityDaos.get(i).getAssignedClass() + "'  ";
 			}
 		}
-		Log.i("SQL Query :",query);
+		Log.i("SQL Query :", query);
 		sqLiteDatabase.execSQL(query);
 	}
-	
+
 	/**
-	 * This function tells you the timeStamp of the last performed activity. Useful while inserting activities to the table. You don't insert something with a higher timestamp than this.
+	 * This function tells you the timeStamp of the last performed activity.
+	 * Useful while inserting activities to the table. You don't insert
+	 * something with a higher timestamp than this.
+	 * 
 	 * @return
 	 */
 	public String getMaxActivityTimeStamp() {
@@ -486,14 +548,16 @@ public class DatabaseConnector {
 			maxTimeStamp = cursor.getString(0);
 		}
 		cursor.close();
-		if(maxTimeStamp==null){
+		if (maxTimeStamp == null) {
 			maxTimeStamp = "0";
 		}
 		return maxTimeStamp;
 	}
-	
+
 	/**
-	 * Gets an ArrayList of activityDaos which have not been assigned a class yet.
+	 * Gets an ArrayList of activityDaos which have not been assigned a class
+	 * yet.
+	 * 
 	 * @return
 	 */
 	public ArrayList<ActivityDao> getUnclassifiedActivities() {
@@ -507,32 +571,35 @@ public class DatabaseConnector {
 				String activityInfo = cursor.getString(2);
 				String timeStamp = cursor.getString(3);
 				String assignedClass = cursor.getString(4);
-				ActivityDao activityDao = new ActivityDao(activityId, activityType, activityInfo, timeStamp, assignedClass);
+				ActivityDao activityDao = new ActivityDao(activityId,
+						activityType, activityInfo, timeStamp, assignedClass);
 				activityDaos.add(activityDao);
 			} while (cursor.moveToNext());
 		}
 		return activityDaos;
 	}
-	
+
 	/**
 	 * Updates the className field of the activities table.
+	 * 
 	 * @param activityDaos
 	 */
 	public void updateActivities(ArrayList<ActivityDao> activityDaos) {
-		if(activityDaos.size()==0){
+		if (activityDaos.size() == 0) {
 			return;
 		}
 		String query = "UPDATE `activities` SET `assignedClass` = CASE activityId ";
 		String queryPartTwo = "";
-		for(ActivityDao activityDao : activityDaos){
-			query += " When " + activityDao.getActivityId() + " THEN '"+activityDao.getAssignedClass()+"'";
+		for (ActivityDao activityDao : activityDaos) {
+			query += " When " + activityDao.getActivityId() + " THEN '"
+					+ activityDao.getAssignedClass() + "'";
 			queryPartTwo += activityDao.getActivityId() + ",";
 		}
 		query += " END WHERE activityId in (" + queryPartTwo + ");";
 		query = query.replace(",);", ");");
 		sqLiteDatabase.execSQL(query);
 	}
-	
+
 	/*************************************************************************
 	 * Methods that work on the messages tables follow
 	 **************************************************************************/
@@ -544,7 +611,8 @@ public class DatabaseConnector {
 	 * @param question
 	 */
 	public void addQuestion(String question) {
-		String query = "INSERT INTO `questionmessages`(`question`) VALUES(\"" + question + "\");";
+		String query = "INSERT INTO `questionmessages`(`question`) VALUES(\""
+				+ question + "\");";
 		sqLiteDatabase.execSQL(query);
 	}
 
@@ -561,12 +629,13 @@ public class DatabaseConnector {
 				+ questionId + "," + answer + "," + similarity + ");";
 		sqLiteDatabase.execSQL(query);
 	}
-	
+
 	/**
 	 * Get the questionId of the last asked question.
+	 * 
 	 * @return
 	 */
-	public int getMaxQuestionId(){
+	public int getMaxQuestionId() {
 		String query = "SELECT MAX(questionId) from questionmessages;";
 		int questionId = 0;
 		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
@@ -579,7 +648,8 @@ public class DatabaseConnector {
 
 	/**
 	 * Given a questionId, I'll return the weighted answer
-	 * @return 
+	 * 
+	 * @return
 	 */
 	public Double getWeightedAnswer(int questionId) {
 		String query = "Select * from `answermessages` WHERE questionId = "
@@ -591,26 +661,27 @@ public class DatabaseConnector {
 			do {
 				int answer = cursor.getInt(2);
 				Double similarity = cursor.getDouble(3);
-				weightedAnswer += (answer*similarity);
+				weightedAnswer += (answer * similarity);
 				totalSimilarity += similarity;
 			} while (cursor.moveToNext());
-			if(totalSimilarity==0.0){
+			if (totalSimilarity == 0.0) {
 				weightedAnswer = 0.0;
-			}
-			else{
-				weightedAnswer = weightedAnswer/totalSimilarity;	
+			} else {
+				weightedAnswer = weightedAnswer / totalSimilarity;
 			}
 		}
 		return weightedAnswer;
 	}
-	
+
 	/**
 	 * Given a questionId, this will return the question. Null, if not.
+	 * 
 	 * @param questionId
 	 * @return
 	 */
-	public String getQuestion(int questionId){
-		String query = "Select question from `questionmessages` WHERE questionId = " + questionId + ";";
+	public String getQuestion(int questionId) {
+		String query = "Select question from `questionmessages` WHERE questionId = "
+				+ questionId + ";";
 		String question = null;
 		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 		if (cursor != null && cursor.moveToFirst()) {
@@ -618,6 +689,105 @@ public class DatabaseConnector {
 		}
 		cursor.close();
 		return question;
+	}
+
+	/*************************************************************************
+	 * Queries that run on the response table follow.
+	 **************************************************************************/
+
+	/**
+	 * Given response data, this query inserts it into the table.
+	 * 
+	 * @param userId
+	 * @param question
+	 * @param answer
+	 * @param className
+	 */
+	public void insertResponse(String userId, String question, int answer,
+			String className) {
+		String query = "INSERT INTO `responses` (`userId` ,`question` ,`answer` ,`className`)"
+				+ "VALUES ('"
+				+ userId
+				+ "', '"
+				+ question
+				+ "', '"
+				+ answer
+				+ "', '" + className + "');";
+		sqLiteDatabase.execSQL(query);
+	}
+
+	/**
+	 * Given an arraylist of response daos, this function will insert them into
+	 * the DB.
+	 * 
+	 * @param responseDaos
+	 */
+	public void insertResponses(ArrayList<ResponseDao> responseDaos) {
+		String query = "";
+		for (int i = 0; i < responseDaos.size(); i++) {
+			if (i % 450 == 0) {
+				if (!query.equals("")) {
+					sqLiteDatabase.execSQL(query);
+				}
+				query = "INSERT INTO `responses` (`userId` ,`question` ,`answer` ,`className`) Select '"
+						+ responseDaos.get(i).getUserId()
+						+ "' AS `userId`, '"
+						+ responseDaos.get(i).getQuestion()
+						+ "' AS `question`, '"
+						+ responseDaos.get(i).getAnswer()
+						+ "' AS `answer`, '"
+						+ responseDaos.get(i).getClassName()
+						+ "' AS `className`";
+			} else {
+				query += "UNION SELECT '" + responseDaos.get(i).getUserId()
+						+ "','" + responseDaos.get(i).getQuestion() + "','"
+						+ responseDaos.get(i).getAnswer() + "','"
+						+ responseDaos.get(i).getClassName() + "'  ";
+			}
+		}
+		sqLiteDatabase.execSQL(query);
+	}
+
+	/**
+	 * Gets the max responseId present in the table.
+	 * 
+	 * @return
+	 */
+	public int getMaxResponseId() {
+		String query = "SELECT MAX(responseId) from responses;";
+		int questionId = 0;
+		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+		if (cursor != null && cursor.moveToFirst()) {
+			questionId = cursor.getInt(0);
+		}
+		cursor.close();
+		return questionId;
+	}
+
+	/**
+	 * Given a startingId and an endingId, this query will return an ArrayList
+	 * of Responses.
+	 * 
+	 * @param startingId
+	 * @param endingId
+	 * @return
+	 */
+	public ArrayList<ResponseDao> getResponses(int startingId, int endingId) {
+		ArrayList<ResponseDao> responseDaos = new ArrayList<ResponseDao>();
+		String query = "Select * from `responses` where responseId>="
+				+ startingId + " AND responseId<=" + endingId + "";
+		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+		if (cursor != null && cursor.moveToFirst()) {
+			do {
+				String userId = cursor.getString(1);
+				String question = cursor.getString(2);
+				int answer = cursor.getInt(3);
+				String className = cursor.getString(4);
+				responseDaos.add(new ResponseDao(userId, question, answer,
+						className));
+			} while (cursor.moveToNext());
+		}
+		return responseDaos;
 	}
 
 }
