@@ -1,5 +1,10 @@
 package com.iitg.mobileprofiler;
 
+import java.util.ArrayList;
+
+import org.iitg.mobileprofiler.db.DatabaseConnector;
+import org.iitg.mobileprofiler.db.ResponseDao;
+
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -8,18 +13,49 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class Responses extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		/*
 		setContentView(R.layout.activity_responses);
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		*/
+		
+		Bundle extras = getIntent().getExtras();
+		String question = "";
+		if (extras != null) {
+		    question = extras.getString("msg");
+		}
+		
+		ArrayList<String> responses = new ArrayList<String>();
+		DatabaseConnector databaseConnector = new DatabaseConnector();
+		ArrayList<ResponseDao> responseDaos = databaseConnector.getAnswersOfQuestion(question);
+		databaseConnector.closeDBConnection();
+		for(ResponseDao responseDao : responseDaos){
+			responses.add(responseDao.getUserId() + "-" + responseDao.getAnswer());
+		}
+		String[] textArray = new String[responses.size()];
+		textArray = responses.toArray(textArray);
+		int length=textArray.length;
+		LinearLayout layout = new LinearLayout(this);
+		setContentView(layout);
+		layout.setOrientation(LinearLayout.VERTICAL);
+		for(int i=0;i<length;i++)
+		{
+		    TextView tv=new TextView(getApplicationContext());
+		    tv.setText(textArray[i]);
+		    layout.addView(tv);
+		}
+
 	}
 
 	@Override

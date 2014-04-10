@@ -1,5 +1,9 @@
 package com.iitg.mobileprofiler;
 
+import java.util.ArrayList;
+
+import org.iitg.mobileprofiler.db.DatabaseConnector;
+
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
@@ -30,7 +34,11 @@ public class Questions extends ActionBarActivity {
 		    System.out.println(value);
 		}
 		//Set of quesitons
-		String[] textArray={"one","two","asdasasdf asdf dsdaa"};
+		DatabaseConnector databaseConnector = new DatabaseConnector();
+		ArrayList<String> questions = databaseConnector.getQuestionsList();
+		databaseConnector.closeDBConnection();
+		String[] textArray = new String[questions.size()];
+		textArray = questions.toArray(textArray);
 		int length=textArray.length;
 		LinearLayout layout = new LinearLayout(this);
 		setContentView(layout);

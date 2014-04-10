@@ -789,5 +789,43 @@ public class DatabaseConnector {
 		}
 		return responseDaos;
 	}
+	
 
+	/**
+	 * Given a question, this function returns all responses.
+	 * @param question
+	 * @return 
+	 */
+	public ArrayList<ResponseDao> getAnswersOfQuestion(String question){
+		String query = "Select * from `responses` Where question='"+question+"';";
+		ArrayList<ResponseDao> responseDaos = new ArrayList<ResponseDao>();
+		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+		if (cursor != null && cursor.moveToFirst()) {
+			do {
+				String userId = cursor.getString(1);
+				int answer = cursor.getInt(3);
+				String className = cursor.getString(4);
+				responseDaos.add(new ResponseDao(userId, question, answer,
+						className));
+			} while (cursor.moveToNext());
+		}
+		return responseDaos;
+	}
+	/**
+	 * Returns a list of unique questions in repo.
+	 * @return
+	 */
+	public ArrayList<String> getQuestionsList(){
+		String query = "Select distinct(question) from `responses`;";
+		ArrayList<String> questions = new ArrayList<String>();
+		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+		if (cursor != null && cursor.moveToFirst()) {
+			do {
+				String question = cursor.getString(0);
+				questions.add(question);
+			} while (cursor.moveToNext());
+		}
+		return questions;
+	}
+	
 }

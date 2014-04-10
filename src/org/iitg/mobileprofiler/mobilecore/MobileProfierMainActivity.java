@@ -32,7 +32,7 @@ public class MobileProfierMainActivity extends Activity {
 		DatabaseConnector databaseConnector = new DatabaseConnector();
 		ArrayList<Integer> userClassContents = databaseConnector.getNumberOfDocuments(0, databaseConnector.getNumberOfClasses(), true);
 		databaseConnector.closeDBConnection();
-		userNodePeer = new UserNodePeer(UtilityFunctions.getHexDigest(phoneName), phoneName, 5689, userClassContents, "192.168.1.3:5080", null, 0);
+		userNodePeer = new UserNodePeer(UtilityFunctions.getHexDigest(phoneName), phoneName, 5689, userClassContents, "192.168.1.2:5080", null, 0);
 		userNodePeer.joinToBootstrapPeer();
 	}
 
@@ -85,6 +85,10 @@ public class MobileProfierMainActivity extends Activity {
 		Intent intent = new Intent(this, Questions.class);
 		intent.putExtra("msg", "I am here!!");
 		startActivity(intent);
+	}
+	
+	public void syncRepoData(View view){
+		userNodePeer.updateRepo();
 	}
 
 	@Override
