@@ -88,10 +88,19 @@
         android:id="@+id/button7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/button5"
         android:layout_below="@+id/button6"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="22dp"
-        android:text="@string/give_answer" 
-        android:onClick="setFeedback"/>
+        android:onClick="setFeedback"
+        android:text="@string/give_answer" />
+
+    <Button
+        android:id="@+id/button8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button7"
+        android:layout_centerHorizontal="true"
+        android:text="@string/getQuestions" 
+        android:onClick="getQuestions" />
 
 </RelativeLayout>

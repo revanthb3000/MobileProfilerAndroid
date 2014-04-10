@@ -23,7 +23,10 @@
     <string name="next">Next Feedback</string>
     <string name="enter_launch_codes">Enter the rating(1-10)</string>
     <string name="title_activity_query">QueryActivity</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_qn_adisplay">QnADisplayActivity</string>
+    <string name="getQuestions">Get Questions</string>
+    <string name="title_activity_questions">Questions</string>
+    <string name="title_activity_responses">Responses</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

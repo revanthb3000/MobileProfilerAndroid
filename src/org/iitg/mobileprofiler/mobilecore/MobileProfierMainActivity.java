@@ -10,6 +10,7 @@ import org.iitg.mobileprofiler.p2p.tools.UtilityFunctions;
 import com.iitg.mobileprofiler.Feedback;
 import com.iitg.mobileprofiler.QnADisplayActivity;
 import com.iitg.mobileprofiler.QueryActivity;
+import com.iitg.mobileprofiler.Questions;
 import com.iitg.mobileprofiler.R;
 
 import android.os.Build;
@@ -77,6 +78,12 @@ public class MobileProfierMainActivity extends Activity {
 	
 	public void setFeedback(View view){
 		Intent intent = new Intent(this, Feedback.class);
+		startActivity(intent);
+	}
+	
+	public void getQuestions(View view){
+		Intent intent = new Intent(this, Questions.class);
+		intent.putExtra("msg", "I am here!!");
 		startActivity(intent);
 	}
 
