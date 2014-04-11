@@ -32,7 +32,7 @@ public class MobileProfierMainActivity extends Activity {
 		DatabaseConnector databaseConnector = new DatabaseConnector();
 		ArrayList<Integer> userClassContents = databaseConnector.getNumberOfDocuments(0, databaseConnector.getNumberOfClasses(), true);
 		databaseConnector.closeDBConnection();
-		userNodePeer = new UserNodePeer(UtilityFunctions.getHexDigest(phoneName), phoneName, 5689, userClassContents, "192.168.1.2:5080", null, 0);
+		userNodePeer = new UserNodePeer(UtilityFunctions.getHexDigest(phoneName), phoneName, 5689, userClassContents, "172.20.10.4:5080", null, 0);
 		userNodePeer.joinToBootstrapPeer();
 	}
 

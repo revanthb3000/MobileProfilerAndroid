@@ -995,7 +995,7 @@ containing a value of this type.
     }
     public static final class id {
         public static final int Button=0x7f05003e;
-        public static final int Button01=0x7f050044;
+        public static final int Button01=0x7f050049;
         public static final int ButtonNext=0x7f05003f;
         public static final int EditText=0x7f050040;
         public static final int action_bar=0x7f05001c;
@@ -1014,14 +1014,14 @@ containing a value of this type.
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
         public static final int button1=0x7f050042;
-        public static final int button2=0x7f050045;
-        public static final int button3=0x7f050043;
-        public static final int button4=0x7f050046;
+        public static final int button2=0x7f05004b;
+        public static final int button3=0x7f050048;
+        public static final int button4=0x7f05004a;
         public static final int button5=0x7f050047;
-        public static final int button6=0x7f050048;
-        public static final int button7=0x7f05004a;
-        public static final int button8=0x7f05004b;
-        public static final int button9=0x7f050049;
+        public static final int button6=0x7f050045;
+        public static final int button7=0x7f050044;
+        public static final int button8=0x7f050046;
+        public static final int button9=0x7f050043;
         public static final int checkbox=0x7f05002d;
         public static final int collapseActionView=0x7f05000d;
         public static final int container=0x7f05003c;
