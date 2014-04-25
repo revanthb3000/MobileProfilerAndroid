@@ -1,6 +1,5 @@
 package com.iitg.mobileprofiler;
 
-import org.iitg.mobileprofiler.mobilecore.MobileProfierMainActivity;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
@@ -74,7 +73,7 @@ public class QueryActivity extends ActionBarActivity {
 		    .setMessage("Enter the Question").show();
 		}
 		else if(!message.equals("Enter your Question")){
-			MobileProfierMainActivity.userNodePeer.sendQuestionToPeers(message);
+			MainActivity.userNodePeer.sendQuestionToPeers(message);
 		}
 		editText.setHint("Enter your Question");
 

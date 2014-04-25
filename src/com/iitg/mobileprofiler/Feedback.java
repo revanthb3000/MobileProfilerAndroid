@@ -1,7 +1,6 @@
 package com.iitg.mobileprofiler;
 
 
-import org.iitg.mobileprofiler.mobilecore.MobileProfierMainActivity;
 import org.iitg.mobileprofiler.p2p.tools.PendingQuestion;
 
 import android.support.v7.app.ActionBarActivity;
@@ -29,8 +28,8 @@ public class Feedback extends ActionBarActivity {
 		}
 		TextView textView = (TextView)findViewById(R.id.editText1);
 		String question = "No questions to answer";
-		if(MobileProfierMainActivity.userNodePeer.getPendingQuestions().size()!=0){
-			question = MobileProfierMainActivity.userNodePeer.getPendingQuestions().get(0).getQuestion();
+		if(MainActivity.userNodePeer.getPendingQuestions().size()!=0){
+			question = MainActivity.userNodePeer.getPendingQuestions().get(0).getQuestion();
 		}
 		textView.setText(question);
 		textView.setKeyListener(null);
@@ -88,9 +87,9 @@ public class Feedback extends ActionBarActivity {
 			new AlertDialog.Builder(this).setTitle("HIGH RATING").setMessage("Enter the values between 1 to 10").show();
 		}
 		else{
-			if(MobileProfierMainActivity.userNodePeer.getPendingQuestions().size()!=0){
-				PendingQuestion pendingQuestion = MobileProfierMainActivity.userNodePeer.getPendingQuestions().get(0);
-				MobileProfierMainActivity.userNodePeer.getPendingQuestions().remove(0);
+			if(MainActivity.userNodePeer.getPendingQuestions().size()!=0){
+				PendingQuestion pendingQuestion = MainActivity.userNodePeer.getPendingQuestions().get(0);
+				MainActivity.userNodePeer.getPendingQuestions().remove(0);
 				pendingQuestion.setAnswer(rating);
 				pendingQuestion.sendReply();	
 			}
@@ -100,12 +99,12 @@ public class Feedback extends ActionBarActivity {
 	public void nextQuestion(View view){
 		TextView textView = (TextView)findViewById(R.id.editText1);
 		PendingQuestion pendingQuestion = null;
-		if(MobileProfierMainActivity.userNodePeer.getPendingQuestions().size()!=0){
-			pendingQuestion = MobileProfierMainActivity.userNodePeer.getPendingQuestions().get(0);
-			MobileProfierMainActivity.userNodePeer.getPendingQuestions().remove(0);
-			MobileProfierMainActivity.userNodePeer.getPendingQuestions().add(pendingQuestion);
+		if(MainActivity.userNodePeer.getPendingQuestions().size()!=0){
+			pendingQuestion = MainActivity.userNodePeer.getPendingQuestions().get(0);
+			MainActivity.userNodePeer.getPendingQuestions().remove(0);
+			MainActivity.userNodePeer.getPendingQuestions().add(pendingQuestion);
 		}
-		String question = MobileProfierMainActivity.userNodePeer.getPendingQuestions().get(0).getQuestion();
+		String question = MainActivity.userNodePeer.getPendingQuestions().get(0).getQuestion();
 		textView.setText(question);
 		textView.setKeyListener(null);		
 	}
