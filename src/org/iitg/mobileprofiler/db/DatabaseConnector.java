@@ -610,9 +610,9 @@ public class DatabaseConnector {
 	 * 
 	 * @param question
 	 */
-	public void addQuestion(String question) {
-		String query = "INSERT INTO `questionmessages`(`question`) VALUES(\""
-				+ question + "\");";
+	public void addQuestion(String question, String className) {
+		String query = "INSERT INTO `questionmessages`(`question`,`className`) VALUES(\""
+				+ question + "\",\"" + className + "\");";
 		sqLiteDatabase.execSQL(query);
 	}
 
@@ -674,6 +674,24 @@ public class DatabaseConnector {
 	}
 
 	/**
+	 * Given a questionId, the number of replies is returned.
+	 * 
+	 * @param questionId
+	 * @return
+	 */
+	public int getNumberOfReplies(int questionId) {
+		String query = "SELECT COUNT(answerId) from `answermessages` WHERE questionId = "
+				+ questionId + ";";
+		int numberOfAnswers = 0;
+		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+		if (cursor != null && cursor.moveToFirst()) {
+			numberOfAnswers = cursor.getInt(0);
+		}
+		cursor.close();
+		return numberOfAnswers;
+	}
+	
+	/**
 	 * Given a questionId, this will return the question. Null, if not.
 	 * 
 	 * @param questionId
@@ -689,6 +707,22 @@ public class DatabaseConnector {
 		}
 		cursor.close();
 		return question;
+	}
+	
+	/**
+	 * Get the className from Question ID
+	 * 
+	 * @return
+	 */
+	public String getQuestionClassName(int questionId) {
+		String query = "SELECT className from questionmessages where questionId = "+questionId+";";
+		String className = "";
+		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+		if (cursor != null && cursor.moveToFirst()) {
+			className = cursor.getString(0);
+		}
+		cursor.close();
+		return className;
 	}
 
 	/*************************************************************************
@@ -749,21 +783,43 @@ public class DatabaseConnector {
 	}
 
 	/**
-	 * Gets the max responseId present in the table.
+	 * Gets the max responseId present in the table (we remove the user's Id
+	 * from consideration)
 	 * 
 	 * @return
 	 */
-	public int getMaxResponseId() {
-		String query = "SELECT MAX(responseId) from responses;";
-		int questionId = 0;
+	public int getMaxResponseId(String blacklistUserId) {
+		String query = "SELECT MAX(responseId) from responses WHERE userId!=\""
+				+ blacklistUserId + "\";";
+		int responseId = 0;
 		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 		if (cursor != null && cursor.moveToFirst()) {
-			questionId = cursor.getInt(0);
+			responseId = cursor.getInt(0);
 		}
 		cursor.close();
-		return questionId;
+		return responseId;
 	}
 
+	/**
+	 * Given a response Dao, this function returns the maximum responseId.
+	 * @param responseDao
+	 * @return
+	 */
+	public int getResponseIdGivenDao(ResponseDao responseDao) {
+		String query = "SELECT MAX(responseId) from responses WHERE userId=\""
+				+ responseDao.getUserId() + "\" AND question=\""
+				+ responseDao.getQuestion() + "\"" + " AND answer="
+				+ responseDao.getAnswer() + " AND className=\""
+				+ responseDao.getClassName() + "\" AND ;";
+		int responseId = 0;
+		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+		if (cursor != null && cursor.moveToFirst()) {
+			responseId = cursor.getInt(0);
+		}
+		cursor.close();
+		return responseId;
+	}
+	
 	/**
 	 * Given a startingId and an endingId, this query will return an ArrayList
 	 * of Responses.

@@ -21,8 +21,9 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
         <activity
-            android:name="com.iitg.mobileprofiler.MainActivity"
+            android:name="org.iitg.mobileprofiler.mobilecore.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -31,65 +32,22 @@
 
         <service android:name="org.iitg.mobileprofiler.mobilecore.MobileProfilerService" >
         </service>
+        
         <service android:name="org.iitg.mobileprofiler.mobilecore.ClassifierService" >
         </service>
+
         <service android:name="org.iitg.mobileprofiler.mobilecore.FeatureComputationService" >
         </service>
-        <service android:name="org.iitg.mobileprofiler.mobilecore.ExperimentalService" >
-        </service>
-
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/fb_app_id" />
-
+        
         <activity
-            android:name="com.facebook.LoginActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="com.iitg.mobileprofiler.AskQuestionActivity"
-            android:label="@string/title_activity_sample_test_acitivity"
-            android:theme="@style/Theme.AppCompat" >
-        </activity>
-        <activity
-            android:name="com.iitg.mobileprofiler.DisplayQuestionActivity"
-            android:label="@string/title_activity_databasequestion"
-            android:theme="@style/Theme.AppCompat" >
-        </activity>
-        <activity
-            android:name="com.iitg.mobileprofiler.Feedback"
-            android:label="@string/title_activity_feedback"
-            android:theme="@style/Theme.AppCompat" >
-        </activity>
-        <activity
-            android:name="com.iitg.mobileprofiler.QueryActivity"
-            android:label="@string/title_activity_query"
-            android:theme="@style/Theme.AppCompat" >
-        </activity>
-        <activity
-            android:name="com.iitg.mobileprofiler.QnADisplayActivity"
-            android:label="@string/title_activity_qn_adisplay"
-            android:theme="@style/Theme.AppCompat" >
-        </activity>
-        <activity
-            android:name="com.iitg.mobileprofiler.Questions"
-            android:label="@string/title_activity_questions"
-            android:theme="@style/Theme.AppCompat" >
-        </activity>
-        <activity
-            android:name="com.iitg.mobileprofiler.Responses"
-            android:label="@string/title_activity_responses" 
-             android:theme="@style/Theme.AppCompat" >
-        </activity>
-        <activity
-            android:name="com.iitg.mobileprofiler.MyList"
+            android:name="org.iitg.mobileprofiler.mobilecore.GiveFeedbackActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.iitg.mobileprofiler.MyList2"
+            android:name="org.iitg.mobileprofiler.mobilecore.GetFeedbackActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -97,7 +55,7 @@
         </activity>
         
         <activity
-            android:name="com.iitg.mobileprofiler.Question_Act"
+            android:name="org.iitg.mobileprofiler.mobilecore.AskQuestionActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -106,7 +64,7 @@
 
         
         <activity
-            android:name="com.iitg.mobileprofiler.First_Page"
+            android:name="org.iitg.mobileprofiler.mobilecore.First_Page"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -114,14 +72,14 @@
             </intent-filter>
         </activity>
 
-                
         <activity
-            android:name="com.iitg.mobileprofiler.Response"
+            android:name="org.iitg.mobileprofiler.mobilecore.DisplayResponseRepoActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+               
         
     </application>
 

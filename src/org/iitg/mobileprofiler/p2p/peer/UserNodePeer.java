@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.iitg.mobileprofiler.db.DatabaseConnector;
+import org.iitg.mobileprofiler.db.ResponseDao;
 import org.iitg.mobileprofiler.p2p.msg.JoinMessage;
 import org.iitg.mobileprofiler.p2p.msg.PeerListMessage;
 import org.iitg.mobileprofiler.p2p.msg.PeerListRequestMessage;
@@ -112,6 +113,7 @@ public class UserNodePeer extends Peer {
 			if(peerMsg.get("type").equals(UserQueryMessage.MSG_USER_QUERY)){
 				int questionId = Integer.parseInt(peerMsg.get("askerQuestionId").toString());
 				String question = peerMsg.get("textMessage").toString();
+				String className = peerMsg.get("className").toString();
 				String userName = params.get("name").toString();
 				String ipAddress = peerMsg.getString("fromAddress");
 				ArrayList<Integer> questionClassDistribution = UtilityFunctions.getClassDistributionFromString(peerMsg.get("classDistribution").toString());
@@ -119,7 +121,7 @@ public class UserNodePeer extends Peer {
 				
 				System.out.println("Question from " + userName + ": " + question);
 				
-				pendingQuestions.add(new PendingQuestion(question, similarity, questionId, ipAddress, this));
+				pendingQuestions.add(new PendingQuestion(question, className, similarity, questionId, ipAddress, this));
 			}
 			if(peerMsg.get("type").equals(QueryReplyMessage.MSG_QUERY_REPLY)){
 				System.out.println("Got a reply");
@@ -239,21 +241,26 @@ public class UserNodePeer extends Peer {
 		}
 	}
 	
-	public void sendQuestionToPeers(String message){
+	public void sendQuestionToPeers(String message, String className){
 		DatabaseConnector databaseConnector = new DatabaseConnector();
 		int questionId = databaseConnector.getMaxQuestionId() + 1;
-		databaseConnector.addQuestion(message);
+		databaseConnector.addQuestion(message, className);
 		databaseConnector.closeDBConnection();
 		
-		UserQueryMessage textMessage = new UserQueryMessage(peerDescriptor, message, classContents,questionId, getAddress().getHost() + ":" + getAddress().getPort());
+		UserQueryMessage textMessage = new UserQueryMessage(peerDescriptor, message, className, classContents,questionId, getAddress().getHost() + ":" + getAddress().getPort());
 		send(new Address(bootstrapAddress), textMessage);
 	}
 	
-	public void sendReply(String question, Double similarity, int answer, int questionId, String destinationIpAddress){
+	public void sendReply(String question, String className, Double similarity, int answer, int questionId, String destinationIpAddress, Boolean isPublic){
 		QueryReplyMessage queryReplyMessage = new QueryReplyMessage(peerDescriptor, question, similarity, answer, questionId);
-		RepoStorageMessage repoStorageMessage = new RepoStorageMessage(peerDescriptor, question, peerDescriptor.getName() , answer);
 		send(new Address(destinationIpAddress), queryReplyMessage);
-		send(new Address(bootstrapAddress), repoStorageMessage);
+		if(isPublic){
+			RepoStorageMessage repoStorageMessage = new RepoStorageMessage(peerDescriptor, question, className, peerDescriptor.getName() , answer);
+			send(new Address(bootstrapAddress), repoStorageMessage);	
+		}
+		DatabaseConnector databaseConnector = new DatabaseConnector();
+		databaseConnector.insertResponse(peerDescriptor.getName(), question, answer, className);
+		databaseConnector.closeDBConnection();
 	}
 	
 	public void sendPeerListRequestMessage(){
@@ -319,9 +326,10 @@ public class UserNodePeer extends Peer {
 	
 	public void updateRepo(){
 		DatabaseConnector databaseConnector = new DatabaseConnector();
-		int maxResponseId = databaseConnector.getMaxResponseId();
+		int maxResponseId = databaseConnector.getMaxResponseId(peerDescriptor.getName());
+		ResponseDao responseDao = databaseConnector.getResponses(maxResponseId, maxResponseId).get(0);
 		databaseConnector.closeDBConnection();
-		ResponseRequestMessage responseRequestMessage = new ResponseRequestMessage(peerDescriptor, maxResponseId);
+		ResponseRequestMessage responseRequestMessage = new ResponseRequestMessage(peerDescriptor, responseDao);
 		send(new Address(bootstrapAddress), responseRequestMessage);
 	}
 
