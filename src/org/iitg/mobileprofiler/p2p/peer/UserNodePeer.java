@@ -324,10 +324,11 @@ public class UserNodePeer extends Peer {
 			System.out.println("no sbc address found");
 	}
 	
-	public void updateRepo(){
+	public void updateRepo() {
 		DatabaseConnector databaseConnector = new DatabaseConnector();
 		int maxResponseId = databaseConnector.getMaxResponseId(peerDescriptor.getName());
-		ResponseDao responseDao = databaseConnector.getResponses(maxResponseId, maxResponseId).get(0);
+		ArrayList<ResponseDao> responseDaos = databaseConnector.getResponses(maxResponseId, maxResponseId);
+		ResponseDao responseDao = responseDaos.isEmpty() ? null : responseDaos.get(0);
 		databaseConnector.closeDBConnection();
 		ResponseRequestMessage responseRequestMessage = new ResponseRequestMessage(peerDescriptor, responseDao);
 		send(new Address(bootstrapAddress), responseRequestMessage);

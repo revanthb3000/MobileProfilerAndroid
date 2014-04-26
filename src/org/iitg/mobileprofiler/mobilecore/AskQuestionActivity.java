@@ -14,11 +14,13 @@ import android.widget.Toast;
 
 public class AskQuestionActivity extends Activity{
 
-	TextView t_q;
-	Button ok;
-	EditText et_q;
-	Spinner sp_topic;
-	String[] topic = {"abc","alf","topic2","topic3"};
+	TextView textView;
+	Button button;
+	EditText editText;
+	Spinner spinner;
+	String[] topics = {"Politics","Movies","Cricket","Animation",
+					   "Entertainment", "Technology", "TV Show",
+					   "News", "Social","Football", "Tennis"};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,26 +29,24 @@ public class AskQuestionActivity extends Activity{
 		setContentView(R.layout.question_display);
 		
 		
-		ok = (Button)findViewById(R.id.btn_sumit);
-		et_q = (EditText) findViewById(R.id.et_question);
-		sp_topic = (Spinner) findViewById( R.id.sp_1);
+		button = (Button)findViewById(R.id.btn_sumit);
+		editText = (EditText) findViewById(R.id.et_question);
+		spinner = (Spinner) findViewById( R.id.sp_1);
 		
 		
-		ArrayAdapter<String> adapter_fileName= new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_block, topic);
-		sp_topic.setAdapter(adapter_fileName);
-		
+		ArrayAdapter<String> adapter_fileName= new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_block, topics);
+		spinner.setAdapter(adapter_fileName);		
 		
 	}
 	
 	public void Submit(View v){
-		String qus = et_q.getText().toString();
-		String sellected_topic = topic[sp_topic.getSelectedItemPosition()];
-		if(qus.equals("")){
+		String question = editText.getText().toString();
+		String selectedTopic = topics[spinner.getSelectedItemPosition()];
+		if(question.equals("")){
 			Toast.makeText(this, "Please enter a String", Toast.LENGTH_SHORT).show();
 		}else{
-			MainActivity.userNodePeer.sendQuestionToPeers(qus, sellected_topic);
+			MainActivity.userNodePeer.sendQuestionToPeers(question, selectedTopic);
 		}
-		
 	}
 	
 }

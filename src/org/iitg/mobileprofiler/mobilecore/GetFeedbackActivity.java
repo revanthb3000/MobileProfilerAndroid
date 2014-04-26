@@ -22,13 +22,13 @@ public class GetFeedbackActivity extends Activity{
 	
 	ListView mainListView;
 	
-	String[] questions = {"Suppose this is a long question ? aba aljafk ","Mango","Banana","Fruit","Grape","Tomato","Strawberry"};
+	String[] questions = {};
 	
-	String[] classNames ={"Group 1","Group 2","Banana","Fruit","Grape","g2","g1"};
+	String[] classNames ={};
 	
-	Double[] weights = {6.0,7.3,9.5,4.8,5.9,2.1,3.6};
+	Double[] weights = {};
 	
-	Integer[] numberOfRatings = {1,3,2,4,5,2,3};
+	Integer[] numberOfRatings = {};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

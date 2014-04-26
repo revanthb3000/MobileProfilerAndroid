@@ -1,5 +1,9 @@
 package org.iitg.mobileprofiler.mobilecore;
 
+import java.util.ArrayList;
+
+import org.iitg.mobileprofiler.p2p.tools.PendingQuestion;
+
 import com.iitg.mobileprofiler.R;
 
 import android.content.Context;
@@ -21,24 +25,46 @@ import android.widget.TextView;
 
 public class GiveFeedbackActivity extends FragmentActivity implements Communicator, OnItemClickListener{
 
-	ListView main_display;
-	String[] data ={"Suppose this is a long question ? aba aljafk lafa falfjalf lajf ","Mango","Banana","Fruit","Grape","Tomato","Strawberry"};
-	Boolean[] privacy = {true,true,false,true,true,false,false};
-	int[] ratting_value = {6,7,9,4,5,2,3};
+	ListView mainDisplayListView;
+
+	String[] questions ={"Suppose this is a long question ? aba aljafk lafa falfjalf lajf ","Mango","Banana","Fruit","Grape","Tomato","Strawberry"};
+	
+	Boolean[] privacyOptions = {true,true,false,true,true,false,false};
+	
+	Integer[] ratingValues = {0,0,0,0,0,0,0};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+
 		super.onCreate(savedInstanceState);		
 		setContentView(R.layout.listing_data);
 		
-		main_display = (ListView) findViewById(R.id.listView_mainDisplay);
-		//ArrayAdapter<String> my_adapter= new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, abc);
+		mainDisplayListView = (ListView) findViewById(R.id.listView_mainDisplay);
 		
-		My_Adapter my_adapter = new My_Adapter(this,data);
-		main_display.setAdapter(my_adapter);
-		main_display.setOnItemClickListener(this);
+		ArrayList<String> questionsList = new ArrayList<String>();
+		ArrayList<Boolean> privacyList = new ArrayList<Boolean>();
+		ArrayList<Integer> ratingsList = new ArrayList<Integer>();
+//		for(PendingQuestion pendingQuestion : MainActivity.userNodePeer.getPendingQuestions()){
+//			questionsList.add(pendingQuestion.getQuestion());
+//			privacyList.add(true);
+//			ratingsList.add(pendingQuestion.getAnswer());
+//		}
+		questionsList.add("fuck me");
+		privacyList.add(true);
+		ratingsList.add(6);
 		
+		questions = new String[questionsList.size()];
+	    questions = questionsList.toArray(questions);
+	    
+	    ratingValues = new Integer[ratingsList.size()];
+	    ratingValues = ratingsList.toArray(ratingValues);
+	    
+	    privacyOptions = new Boolean[privacyList.size()];
+	    privacyOptions = privacyList.toArray(privacyOptions);
+	    
+		PendingQuestionsAdapter pendingQuestionsAdapter = new PendingQuestionsAdapter(this,questions);
+		mainDisplayListView.setAdapter(pendingQuestionsAdapter);
+		mainDisplayListView.setOnItemClickListener(this);
 	}
 	
 	public static boolean isTablet(Context context) {
@@ -48,26 +74,25 @@ public class GiveFeedbackActivity extends FragmentActivity implements Communicat
 	}
 	
 	public void PopOut(int list_position){
-		//android.app.FragmentManager mannager = getf
-		Log.v("POP_OUP_1", data[list_position] +" priv:"+String.valueOf(privacy[list_position])+" Ratting:"+String.valueOf(ratting_value[list_position]));
+
+		Log.v("POP_OUP_1", questions[list_position] +" priv:"+String.valueOf(privacyOptions[list_position])+" Ratting:"+String.valueOf(ratingValues[list_position]));
 		FragmentManager manager = getSupportFragmentManager();
 		DialogPopOut myDialog = new DialogPopOut();
 		Bundle args = new Bundle();
-		//Log.v("POP_OUP_2", name+" priv:"+String.valueOf(b)+" Ratting:"+String.valueOf(r));
+
 		args.putInt("list_position", list_position);
-		args.putString("data", data[list_position]);
-		args.putBoolean("mode", privacy[list_position]);
-		args.putInt("num", ratting_value[list_position]);
+		args.putString("data", questions[list_position]);
+		args.putBoolean("mode", privacyOptions[list_position]);
+		args.putInt("num", ratingValues[list_position]);
 		myDialog.setArguments(args);
-		//Log.v("POP_OUP", name+" priv:"+String.valueOf(b)+" Ratting:"+String.valueOf(r));
 		myDialog.show(manager, "value");
 		
 	}
 	
-	public class My_Adapter extends ArrayAdapter<String>{
+	public class PendingQuestionsAdapter extends ArrayAdapter<String>{
 
 		Context context;
-		public My_Adapter(Context c,String[] titles) {
+		public PendingQuestionsAdapter(Context c,String[] titles) {
 			
 			super(c,R.layout.list_block_new,titles);
 			this.context =c;
@@ -94,12 +119,11 @@ public class GiveFeedbackActivity extends FragmentActivity implements Communicat
 				}
 			});
 			
-			
-			data_text.setText(data[position]);
-			if(privacy[position] ==true){
+			data_text.setText(questions[position]);
+			if(privacyOptions[position] ==true){
 				mode_icon.setImageResource(R.drawable.lock);
 			}
-			String ratting = String.valueOf(ratting_value[position]);
+			String ratting = String.valueOf(ratingValues[position]);
 			text_ratting.setText(ratting);
 			
 			return v;
@@ -109,27 +133,26 @@ public class GiveFeedbackActivity extends FragmentActivity implements Communicat
 	@Override
 	public void makeChange(int position, boolean mode, int ratting) {
 		
-		Log.v("PPZ", "First");
-		View sellected_View = main_display.getChildAt(position);//(View) main_display.getItemAtPosition(position);
+		View sellected_View = mainDisplayListView.getChildAt(position);
+		//(View) main_display.getItemAtPosition(position);
 		//main_display.getitem
 		//TextView s_data_text = (TextView) sellected_View.findViewById(R.id.tv_itemName);
 		
 		ImageView s_mode_icon = (ImageView) sellected_View.findViewById(R.id.iv_mode);
-		Log.v("PPZ", "First");
 		TextView s_text_ratting = (TextView) sellected_View.findViewById(R.id.tv_ratting);
-		Log.v("PPZ", "First");
+
 		if(mode==true){
 			s_mode_icon.setImageResource(R.drawable.lock);
 			
 		}else{
 			s_mode_icon.setImageResource(R.drawable.my_unlock);
 		}
-		Log.v("PPZ", "First");
+
 		s_text_ratting.setText(String.valueOf(ratting));
 		
 		//Data Modification
-		privacy[position] = mode;
-		ratting_value[position] = ratting;
+		privacyOptions[position] = mode;
+		ratingValues[position] = ratting;
 	}
 
 	@Override
