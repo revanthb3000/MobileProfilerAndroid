@@ -18,9 +18,7 @@ public class AskQuestionActivity extends Activity{
 	Button button;
 	EditText editText;
 	Spinner spinner;
-	String[] topics = {"Politics","Movies","Cricket","Animation",
-					   "Entertainment", "Technology", "TV Show",
-					   "News", "Social","Football", "Tennis"};
+	String[] topics = {"Animation","Cricket","Entertainment","Football","Movies","News","Politics","Social","Technology","Tennis","TV Show"};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +37,14 @@ public class AskQuestionActivity extends Activity{
 		
 	}
 	
-	public void Submit(View v){
+	public void sendQuestion(View v){
 		String question = editText.getText().toString();
 		String selectedTopic = topics[spinner.getSelectedItemPosition()];
 		if(question.equals("")){
 			Toast.makeText(this, "Please enter a String", Toast.LENGTH_SHORT).show();
 		}else{
-			MainActivity.userNodePeer.sendQuestionToPeers(question, selectedTopic);
+			FirstPage.userNodePeer.sendQuestionToPeers(question, selectedTopic);
+			Toast.makeText(this, "Question Sent", Toast.LENGTH_SHORT).show();
 		}
 	}
 	

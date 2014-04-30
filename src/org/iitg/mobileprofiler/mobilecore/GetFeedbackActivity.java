@@ -60,7 +60,7 @@ public class GetFeedbackActivity extends Activity{
 	    questions = questionsList.toArray(questions);
 	    
 	    classNames = new String[classNamesList.size()];
-	    classNames = questionsList.toArray(classNames);
+	    classNames = classNamesList.toArray(classNames);
 	    
 	    weights = new Double[weightsList.size()];
 	    weights = weightsList.toArray(weights);

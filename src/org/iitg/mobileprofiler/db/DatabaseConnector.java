@@ -725,6 +725,71 @@ public class DatabaseConnector {
 		return className;
 	}
 
+	
+	/*************************************************************************
+	 * Queries that run on the response Class table follow.
+	 **************************************************************************/
+
+	/**
+	 * This is used to insert a className into the response class table.
+	 * Standard query.
+	 * @param className
+	 */
+	public void insertResponseClass(String className) {
+		String query = "INSERT INTO responseclasses (`className`) VALUES ('"
+				+ className + "');";
+		sqLiteDatabase.execSQL(query);
+	}
+
+	/**
+	 * Given a classId, the className is returned.
+	 * @param classId
+	 * @return
+	 */
+	public String getResponseClassName(int classId) {
+		String query = "SELECT className FROM `responseclasses` WHERE `classId` = "
+						+ classId + "";
+		String className = "";
+		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+		if (cursor != null && cursor.moveToFirst()) {
+			className = cursor.getString(0);
+		}
+		cursor.close();
+		return className;
+	}
+	
+	/**
+	 * Gets the number of various response Classes present.
+	 * @return
+	 */
+	public int getNumberOfResponseClasses(){
+		String query = "SELECT Count(className) from responseclasses;";
+		int numberOfClasses = 0;
+		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+		if (cursor != null && cursor.moveToFirst()) {
+			numberOfClasses = cursor.getInt(0);
+		}
+		cursor.close();
+		return numberOfClasses;
+	}
+	
+	/**
+	 * Given a className, the classId is returned.
+	 * @param classId
+	 * @return
+	 */
+	public int getResponseClassId(String className) {
+		String query = "SELECT classId FROM `responseclasses` WHERE `className` = \""
+						+ className + "\";";
+		int classId = 0;
+		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+		if (cursor != null && cursor.moveToFirst()) {
+			classId = cursor.getInt(0);
+		}
+		cursor.close();
+		return classId;
+	}
+	
 	/*************************************************************************
 	 * Queries that run on the response table follow.
 	 **************************************************************************/
@@ -738,15 +803,15 @@ public class DatabaseConnector {
 	 * @param className
 	 */
 	public void insertResponse(String userId, String question, int answer,
-			String className) {
-		String query = "INSERT INTO `responses` (`userId` ,`question` ,`answer` ,`className`)"
+			int classId) {
+		String query = "INSERT INTO `responses` (`userId` ,`question` ,`answer` ,`classId`)"
 				+ "VALUES ('"
 				+ userId
 				+ "', '"
 				+ question
 				+ "', '"
 				+ answer
-				+ "', '" + className + "');";
+				+ "', '" + classId + "');";
 		sqLiteDatabase.execSQL(query);
 	}
 
@@ -770,13 +835,13 @@ public class DatabaseConnector {
 						+ "' AS `question`, '"
 						+ responseDaos.get(i).getAnswer()
 						+ "' AS `answer`, '"
-						+ responseDaos.get(i).getClassName()
-						+ "' AS `className`";
+						+ responseDaos.get(i).getClassId()
+						+ "' AS `classId`";
 			} else {
 				query += "UNION SELECT '" + responseDaos.get(i).getUserId()
 						+ "','" + responseDaos.get(i).getQuestion() + "','"
 						+ responseDaos.get(i).getAnswer() + "','"
-						+ responseDaos.get(i).getClassName() + "'  ";
+						+ responseDaos.get(i).getClassId() + "'  ";
 			}
 		}
 		sqLiteDatabase.execSQL(query);
@@ -809,8 +874,8 @@ public class DatabaseConnector {
 		String query = "SELECT MAX(responseId) from responses WHERE userId=\""
 				+ responseDao.getUserId() + "\" AND question=\""
 				+ responseDao.getQuestion() + "\"" + " AND answer="
-				+ responseDao.getAnswer() + " AND className=\""
-				+ responseDao.getClassName() + "\" AND ;";
+				+ responseDao.getAnswer() + " AND classId="
+				+ responseDao.getClassId() + ";";
 		int responseId = 0;
 		Cursor cursor = sqLiteDatabase.rawQuery(query, null);
 		if (cursor != null && cursor.moveToFirst()) {
@@ -838,9 +903,9 @@ public class DatabaseConnector {
 				String userId = cursor.getString(1);
 				String question = cursor.getString(2);
 				int answer = cursor.getInt(3);
-				String className = cursor.getString(4);
+				int classId = cursor.getInt(4);
 				responseDaos.add(new ResponseDao(userId, question, answer,
-						className));
+						classId));
 			} while (cursor.moveToNext());
 		}
 		return responseDaos;
@@ -860,13 +925,14 @@ public class DatabaseConnector {
 			do {
 				String userId = cursor.getString(1);
 				int answer = cursor.getInt(3);
-				String className = cursor.getString(4);
+				int classId = cursor.getInt(4);
 				responseDaos.add(new ResponseDao(userId, question, answer,
-						className));
+						classId));
 			} while (cursor.moveToNext());
 		}
 		return responseDaos;
 	}
+	
 	/**
 	 * Returns a list of unique questions in repo.
 	 * @return

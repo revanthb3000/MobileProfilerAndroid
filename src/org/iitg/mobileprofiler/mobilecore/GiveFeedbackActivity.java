@@ -27,11 +27,11 @@ public class GiveFeedbackActivity extends FragmentActivity implements Communicat
 
 	ListView mainDisplayListView;
 
-	String[] questions ={"Suppose this is a long question ? aba aljafk lafa falfjalf lajf ","Mango","Banana","Fruit","Grape","Tomato","Strawberry"};
+	String[] questions = {};;
 	
-	Boolean[] privacyOptions = {true,true,false,true,true,false,false};
+	Boolean[] privacyOptions = {};;
 	
-	Integer[] ratingValues = {0,0,0,0,0,0,0};
+	Integer[] ratingValues = {};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,26 +41,7 @@ public class GiveFeedbackActivity extends FragmentActivity implements Communicat
 		
 		mainDisplayListView = (ListView) findViewById(R.id.listView_mainDisplay);
 		
-		ArrayList<String> questionsList = new ArrayList<String>();
-		ArrayList<Boolean> privacyList = new ArrayList<Boolean>();
-		ArrayList<Integer> ratingsList = new ArrayList<Integer>();
-//		for(PendingQuestion pendingQuestion : MainActivity.userNodePeer.getPendingQuestions()){
-//			questionsList.add(pendingQuestion.getQuestion());
-//			privacyList.add(true);
-//			ratingsList.add(pendingQuestion.getAnswer());
-//		}
-		questionsList.add("fuck me");
-		privacyList.add(true);
-		ratingsList.add(6);
-		
-		questions = new String[questionsList.size()];
-	    questions = questionsList.toArray(questions);
-	    
-	    ratingValues = new Integer[ratingsList.size()];
-	    ratingValues = ratingsList.toArray(ratingValues);
-	    
-	    privacyOptions = new Boolean[privacyList.size()];
-	    privacyOptions = privacyList.toArray(privacyOptions);
+		loadArrays();
 	    
 		PendingQuestionsAdapter pendingQuestionsAdapter = new PendingQuestionsAdapter(this,questions);
 		mainDisplayListView.setAdapter(pendingQuestionsAdapter);
@@ -87,6 +68,27 @@ public class GiveFeedbackActivity extends FragmentActivity implements Communicat
 		myDialog.setArguments(args);
 		myDialog.show(manager, "value");
 		
+	}
+	
+	public void loadArrays(){
+		ArrayList<String> questionsList = new ArrayList<String>();
+		ArrayList<Boolean> privacyList = new ArrayList<Boolean>();
+		ArrayList<Integer> ratingsList = new ArrayList<Integer>();
+		
+		for(PendingQuestion pendingQuestion : FirstPage.userNodePeer.getPendingQuestions()){
+			questionsList.add(pendingQuestion.getQuestion());
+			privacyList.add(true);
+			ratingsList.add(pendingQuestion.getAnswer());
+		}
+		
+		questions = new String[questionsList.size()];
+	    questions = questionsList.toArray(questions);
+	    
+	    ratingValues = new Integer[ratingsList.size()];
+	    ratingValues = ratingsList.toArray(ratingValues);
+	    
+	    privacyOptions = new Boolean[privacyList.size()];
+	    privacyOptions = privacyList.toArray(privacyOptions);
 	}
 	
 	public class PendingQuestionsAdapter extends ArrayAdapter<String>{
@@ -123,36 +125,46 @@ public class GiveFeedbackActivity extends FragmentActivity implements Communicat
 			if(privacyOptions[position] ==true){
 				mode_icon.setImageResource(R.drawable.lock);
 			}
-			String ratting = String.valueOf(ratingValues[position]);
-			text_ratting.setText(ratting);
+			String rating = String.valueOf(ratingValues[position]);
+			text_ratting.setText(rating);
 			
 			return v;
 		}		
 	}
 
 	@Override
-	public void makeChange(int position, boolean mode, int ratting) {
+	public void makeChange(int position, boolean isPrivate, int rating) {
 		
-		View sellected_View = mainDisplayListView.getChildAt(position);
-		//(View) main_display.getItemAtPosition(position);
-		//main_display.getitem
-		//TextView s_data_text = (TextView) sellected_View.findViewById(R.id.tv_itemName);
+		View selectedView = mainDisplayListView.getChildAt(position);
 		
-		ImageView s_mode_icon = (ImageView) sellected_View.findViewById(R.id.iv_mode);
-		TextView s_text_ratting = (TextView) sellected_View.findViewById(R.id.tv_ratting);
+		ImageView s_mode_icon = (ImageView) selectedView.findViewById(R.id.iv_mode);
+		TextView s_text_ratting = (TextView) selectedView.findViewById(R.id.tv_ratting);
 
-		if(mode==true){
+		if(isPrivate==true){
 			s_mode_icon.setImageResource(R.drawable.lock);
 			
 		}else{
 			s_mode_icon.setImageResource(R.drawable.my_unlock);
 		}
 
-		s_text_ratting.setText(String.valueOf(ratting));
+		s_text_ratting.setText(String.valueOf(rating));
 		
 		//Data Modification
-		privacyOptions[position] = mode;
-		ratingValues[position] = ratting;
+		privacyOptions[position] = isPrivate;
+		ratingValues[position] = rating;
+		
+		PendingQuestion pendingQuestion = FirstPage.userNodePeer.getPendingQuestions().get(position);
+		FirstPage.userNodePeer.getPendingQuestions().remove(position);
+		
+		pendingQuestion.setAnswer(rating);
+		pendingQuestion.sendReply(!isPrivate);
+		
+		loadArrays();
+		
+		PendingQuestionsAdapter pendingQuestionsAdapter = new PendingQuestionsAdapter(this,questions);
+		mainDisplayListView.setAdapter(pendingQuestionsAdapter);
+		mainDisplayListView.setOnItemClickListener(this);
+		
 	}
 
 	@Override

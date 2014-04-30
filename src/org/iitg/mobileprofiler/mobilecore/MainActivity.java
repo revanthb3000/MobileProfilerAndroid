@@ -1,7 +1,6 @@
 package org.iitg.mobileprofiler.mobilecore;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.iitg.mobileprofiler.db.DatabaseConnector;
 import org.iitg.mobileprofiler.p2p.peer.UserNodePeer;
@@ -27,9 +26,6 @@ public class MainActivity extends Activity {
 
 	ListView listView;
 	
-	public static UserNodePeer userNodePeer;
-	
-	private static final int PEER_PORT_NUMBER = 5689;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +47,6 @@ public class MainActivity extends Activity {
 		
 		Toast.makeText(this, "IP:"+ipAddress+"\n port:"+portNumber, Toast.LENGTH_SHORT).show();
 		
-		try{
-			String phoneName = Build.ID + Build.MODEL + (new Date()).getTime();
-			DatabaseConnector databaseConnector = new DatabaseConnector();
-			ArrayList<Integer> userClassContents = databaseConnector.getNumberOfDocuments(0, databaseConnector.getNumberOfClasses(), true);
-			databaseConnector.closeDBConnection();
-			userNodePeer = new UserNodePeer(UtilityFunctions.getHexDigest(phoneName), phoneName, PEER_PORT_NUMBER , userClassContents, ipAddress + ":" + portNumber, null, 0);
-			userNodePeer.joinToBootstrapPeer();	
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			Log.e("MainActivityError", "Error in getting classcontents/connecting to bootstrap");
-		}
 		
 	}
 	
@@ -112,7 +96,7 @@ public class MainActivity extends Activity {
 			
 		case R.id.btn_c1:
 			Log.v(TAG,"Updating Repo");
-			userNodePeer.updateRepo();
+			FirstPage.userNodePeer.updateRepo();
 			break;
 			
 		case R.id.btn_c2:
