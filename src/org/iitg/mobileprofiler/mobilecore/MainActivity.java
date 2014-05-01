@@ -1,11 +1,5 @@
 package org.iitg.mobileprofiler.mobilecore;
 
-import java.util.ArrayList;
-
-import org.iitg.mobileprofiler.db.DatabaseConnector;
-import org.iitg.mobileprofiler.p2p.peer.UserNodePeer;
-import org.iitg.mobileprofiler.p2p.tools.UtilityFunctions;
-
 import com.iitg.mobileprofiler.R;
 
 import android.app.Activity;
@@ -13,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
