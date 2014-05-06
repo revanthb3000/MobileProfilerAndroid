@@ -11,8 +11,8 @@ import com.iitg.mobileprofiler.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -27,7 +27,7 @@ public class FirstPage extends Activity{
 	
 	public static UserNodePeer userNodePeer;	
 
-	public static String phoneName = Build.ID + Build.MODEL;
+	public static String phoneName = null;
 	
 	private static final int PEER_PORT_NUMBER = 5689;
 	
@@ -46,6 +46,8 @@ public class FirstPage extends Activity{
 		
 		ipAddressEditText.setText(ip);
 		portEditText.setText(port);
+		
+		phoneName = Secure.getString(this.getContentResolver(),Secure.ANDROID_ID);
 	
 	}
 	
